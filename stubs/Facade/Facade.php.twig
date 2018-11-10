@@ -1,0 +1,12 @@
+<?php
+
+namespace <%=namespace%>;
+
+use Illuminate\Support\Facades\Facade;
+
+class <%=classname%> extends Facade
+{
+    protected static function getFacadeAccessor() {
+        return '<%= options['service'] %>';
+    }
+}

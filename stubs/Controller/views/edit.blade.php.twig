@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @var <%= model_classname %> $<%= model_singular %>
+ */
+
+$title = 'Update <%= model_name %> : ' . $<%= model_singular %>->page_title;
+$breadcrumbs[] = ['label' => '<%= model_plural %>', 'url' => route('<%= model_plural %>.index')];
+$breadcrumbs[] = ['label' => $<%= model_singular %>->page_title, 'url' => route('<%= model_plural %>.show', ['id' => $<%= model_singular %>->id])];
+$breadcrumbs[] = 'update';
+
+?>
+
+<% if layout %>
+@extends('layouts<%= layout %>.app')
+<% else %>
+@extends('layouts.app')
+<% endif %>
+
+@section('content')
+<div class="<%= model_singular %>-edit container">
+
+  <h1>{{$title}}</h1>
+
+  @include('<%= model_plural %>._form', compact('<%= model_singular %>'))
+
+</div>
+@endsection

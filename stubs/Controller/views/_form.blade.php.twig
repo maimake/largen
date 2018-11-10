@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @var <%= model_classname %> $<%= model_singular %>
+ */
+
+?>
+
+<div class="<%= model_plural %>-form">
+    @if(isset($<%= model_singular %>))
+        {{Form::model($<%= model_singular %>, ['route' => ['<%= model_plural %>.update', $<%= model_singular %>->id], 'method' => 'PUT'])}}
+    @else
+        {{Form::open(['route' => '<%= model_plural %>.store'])}}
+    @endif
+
+
+    <% for column in columns %>
+    <div class="form-group">
+        {{Form::label('<%= column %>', humanize_case('<%= column %>'))}}
+        {{Form::text('<%= column %>', null, ['class' => 'form-control', 'name' => '<%= column %>'])}}
+    </div>
+    <% endfor %>
+
+    <div class="form-group">
+        {{Form::submit(isset($<%= model_singular %>) ? 'Update':'Create', ['class' => 'btn btn-success'])}}
+    </div>
+    {{Form::close()}}
+</div>

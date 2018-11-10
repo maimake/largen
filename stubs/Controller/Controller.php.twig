@@ -1,0 +1,24 @@
+<?php
+
+namespace <%= namespace %>;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+
+class <%= classname %> extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware(['auth'])->except('index');
+    }
+
+    public function index()
+    {
+<% if options['api'] %>
+        $data = [];
+        return response()->json($data);
+<% else %>
+        return view('<%= view_namespace %><%= name %>.index');
+<% endif %>
+    }
+}

@@ -1,0 +1,68 @@
+<template>
+    <div class="login hero is-fullheight is-dark">
+        <div class="hero-body">
+            <div class="container">
+                <div class="tile is-ancestor">
+                    <div class="tile is-4"></div>
+                    <div class="tile is-4 is-parent is-vertical">
+                        <el-form ref="loginForm" class="tile is-child box">
+
+                            <h1 class="title is-5 has-text-centered">系统登录</h1>
+                            <el-form-item>
+                                <el-input type="text" placeholder="邮箱" icon="fa-user"></el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-input type="password" placeholder="密码" icon="fa-lock"></el-input>
+                            </el-form-item>
+                            <div class="level is-mobile">
+                                <div class="level-left"><el-checkbox class="remember" checked>记住登录</el-checkbox></div>
+                                <div class="level-right"><el-button type="text">忘记密码?</el-button></div>
+                            </div>
+
+                            <el-form-item>
+                                <el-button type="primary" style="width:100%;">登录</el-button>
+                            </el-form-item>
+
+                            <div class="register">
+                                <router-link to="/register">尚未注册？</router-link>
+                            </div>
+
+                        </el-form>
+                    </div>
+                    <div class="tile is-4"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</template>
+
+<script>
+    export default {
+        mounted() {
+            console.log('Component mounted.')
+        },
+        metaInfo: {
+            title: 'Login'
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+    .login {
+        background: url("/images/bg.jpg") no-repeat center top;
+        color: whitesmoke;
+        .el-checkbox{
+            color: whitesmoke;
+        }
+        .box {
+            background: rgba(0,0,0,0.5);
+        }
+        .register {
+            font-size: 12px;
+            text-align: center;
+            color: whitesmoke;
+        }
+    }
+</style>

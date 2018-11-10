@@ -1,0 +1,61 @@
+<?php
+
+$title = '<%= name %>';
+$breadcrumbs[] = $title;
+
+?>
+
+
+@push('styles')
+{{--<link href="{{ mix2('css/pages/<%= name %>/index.css') }}" rel="stylesheet">--}}
+@endpush
+
+@push('scripts')
+{{--<script src="{{ mix2('js/pages/<%= name %>/index.js') }}"></script>--}}
+@endpush
+
+
+{{--------------------------------------
+  Template
+  --------------------------------------}}
+
+<% if layout %>
+@extends('layouts<%= layout %>.app')
+<% else %>
+@extends('layouts.app')
+<% endif %>
+
+@section('content')
+    <div class="<%= name %>-index container">
+
+        <h1>{{$title}}</h1>
+
+    </div>
+@endsection
+
+
+
+{{--------------------------------------
+  Stylesheets
+  --------------------------------------}}
+
+@push('styles')
+
+<style>
+
+</style>
+
+@endpush
+
+
+{{--------------------------------------
+  Javascripts
+  --------------------------------------}}
+
+@push('scripts')
+
+<script>
+
+</script>
+
+@endpush

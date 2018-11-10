@@ -1,0 +1,63 @@
+<?php
+
+namespace <%=namespace%>;
+
+use Maimake\Largen\Support\Repositories\RepositoryBase;
+use Maimake\Largen\Support\Http\Requests\SearchRequest;
+use Illuminate\Database\Eloquent\Builder;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use <%= model_class %>;
+use App\User;
+
+class <%=classname%> extends RepositoryBase
+{
+    protected $modelClass = <%= model_name %>::class;
+
+
+    public function search(SearchRequest $request){
+
+        return $this->paginate(function (Builder $query) use ($request) {
+
+            $request->getSearchModel()->search($query);
+
+        })->appends($request->getRequestData());
+    }
+
+
+    public function searchFilters(string $filter_name, string $filter_key = null)
+    {
+        $method = 'searchFiltersBy_' . $filter_name;
+        if(method_exists($this, $method))
+        {
+            return $this->$method($filter_key);
+        }else
+        {
+            throw new BadRequestHttpException("$filter_name is Not Supported");
+        }
+    }
+
+    public function searchFiltersBy_username(string $filter_key = null)
+    {
+        $paginator = $this->paginate(function (Builder &$query) use ($filter_key) {
+
+            $query = User::query();
+
+            if (!empty($filter_key))
+            {
+                $query->where('name' , 'like', "%${filter_key}%");
+            }
+
+            $query->has('phone')->select('name');
+
+        });
+
+        $paginator->getCollection()->transform(function ($item) {
+            return [
+                'id' => $item['name'],
+                'text' => $item['name'],
+            ];
+        });
+
+        return $paginator;
+    }
+}

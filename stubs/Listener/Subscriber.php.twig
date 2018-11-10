@@ -1,0 +1,31 @@
+<?php
+
+namespace <%=namespace%>;
+
+use Illuminate\Events\Dispatcher;
+
+class <%=classname%>
+{
+    public function onEvent($event)
+    {
+
+    }
+
+    /**
+     * @param Dispatcher $events
+     */
+    public function subscribe($events)
+    {
+
+    <% for event_class in options['events'] %>
+
+        $events->listen(
+            \<%= event_class %>::class,
+            '<%=namespace%>\<%=classname%>@onEvent'
+        );
+
+    <% endfor %>
+
+    }
+
+}

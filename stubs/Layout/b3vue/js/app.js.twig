@@ -1,0 +1,13 @@
+$(function () {
+    // jQuery
+    console.log('jquery ready');
+});
+
+<% if use_vue %>
+var app = new Vue({
+    el: '#app',
+    data: {
+        message: 'Hello Vue!'
+    }
+});
+<% endif %>

@@ -1,0 +1,13 @@
+<?php
+
+use Faker\Generator as Faker;
+
+$factory->define(<%= model_class %>::class, function (Faker $faker) {
+    static $password;
+
+    return [
+<% for key, val in fields %>
+        '<%= key %>' => <%= val %>,
+<% endfor %>
+    ];
+});

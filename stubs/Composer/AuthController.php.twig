@@ -1,0 +1,53 @@
+<?php
+
+namespace <%=namespace%>;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Laravel\Socialite\Facades\Socialite;
+
+class <%=classname%> extends Controller
+{
+    public function __construct()
+    {
+    }
+
+    /**
+     * Redirect the user to the GitHub authentication page.
+     *
+     */
+    public function redirectToProvider()
+    {
+        return Socialite::driver('github')
+//            ->setScopes(['scope1', 'scope2'])
+//            ->with([
+//                'hd' => 'example.com',
+//            ])
+            ->redirect();
+    }
+
+    /**
+     * Obtain the user information from GitHub.
+     *
+     */
+    public function handleProviderCallback()
+    {
+        $user = Socialite::driver('github')->user();
+
+        $token = $user->token;
+        $refreshToken = $user->refreshToken; // not always provided
+        $expiresIn = $user->expiresIn;
+
+        $user->getId();
+        $user->getNickname();
+        $user->getName();
+        $user->getEmail();
+        $user->getAvatar();
+    }
+
+    protected function getUserInfoWithToken($token)
+    {
+        $user = Socialite::driver('github')->userFromToken($token);
+        return $user;
+    }
+}

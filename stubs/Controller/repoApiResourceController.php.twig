@@ -1,0 +1,106 @@
+<?php
+
+namespace <%= namespace %>;
+
+<% if model_classname -%>
+use <%= model_classname %>;
+<% endif %>
+use <%= repo_classname %>;
+use <%= request_full_class_name %>;
+use <%= search_request_full_class_name %>;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
+
+class <%= classname %> extends Controller
+{
+    protected $repository;
+
+    public function __construct(<%= model_name %>Repository $repository)
+    {
+        $this->repository = $repository;
+        $this->middleware(['auth'])->except('index', 'show', 'searchFilter');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param <%= search_request_class_name %> $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(<%= search_request_class_name %> $request)
+    {
+        $<%= model_plural %> = $this->repository->search($request);
+        return response()->json($<%= model_plural %>);
+    }
+
+    /**
+     * Ajax search filters by key. The filter value will be used to filter index data.
+     * @param Request $request
+     * @param         $filter_name
+     *
+     * @return mixed
+     */
+    public function searchFilter(Request $request, $filter_name)
+    {
+        $filter_key = $request->get('q', '');
+        return $this->repository->searchFilters($filter_name, $filter_key);
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  <%= request_class_name %>  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(<%= request_class_name %> $request)
+    {
+        $<%= model_singular %> = new <%= model_name %>($request->validated());
+        $<%= model_singular %>->user()->associate(Auth::user());
+        $this->repository->save($<%= model_singular %>);
+
+        return response()->json($<%= model_singular %>);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  <%= model_name %> $<%= model_singular %>
+     * @return \Illuminate\Http\Response
+     */
+    public function show(<%= model_name %> $<%= model_singular %>)
+    {
+        return response()->json($<%= model_singular %>);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  <%= request_class_name %>  $request
+     * @param  <%= model_name %> $<%= model_singular %>
+     * @return \Illuminate\Http\Response
+     */
+    public function update(<%= request_class_name %> $request, <%= model_name %> $<%= model_singular %>)
+    {
+        $<%= model_singular %>->fill($request->validated());
+        $this->repository->save($<%= model_singular %>);
+
+        return response()->json($<%= model_singular %>);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  <%= model_name %> $<%= model_singular %>
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(<%= model_name %> $<%= model_singular %>)
+    {
+        $this->repository->delete($<%= model_singular %>);
+
+        return response()->json($<%= model_singular %>);
+    }
+}

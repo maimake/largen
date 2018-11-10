@@ -1,0 +1,25 @@
+<?php
+
+namespace <%=namespace%>;
+
+use <%= model_class %>;
+
+class <%=classname%>
+{
+<% for event in events %>
+
+    /**
+     * Listen to the <%= event %> event.
+     * Called when operates a model, while won't called via executing a sql directly.
+     *
+     * @param  <%= model_name %>  $model
+     * @return void
+     */
+    public function <%= event %>(<%= model_name %> $model)
+    {
+        //\Log::debug(__FUNCTION__ . ': <%= model_name %>');
+    }
+
+<% endfor %>
+
+}

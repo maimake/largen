@@ -1,0 +1,114 @@
+<?php
+
+namespace <%=namespace%>;
+
+use Maimake\Largen\Support\Clients\HttpClientBase as HttpClient;
+use Maimake\Largen\Support\Exceptions\HttpClientException;
+use Maimake\Largen\Support\Exceptions\NotImplementedException;
+use GuzzleHttp\RequestOptions;
+use GuzzleHttp\Psr7\Response;
+use Symfony\Component\HttpFoundation\Request;
+
+class <%=classname%> extends HttpClient
+{
+    const BASE_URL = 'https://api.github.com';
+
+    protected $user;
+    protected $pwd;
+    protected $token;
+
+    public function __construct(string $user, string $pwd, string $token = '')
+    {
+        parent::__construct(false, [
+            'base_uri' => self::BASE_URL,
+            RequestOptions::COOKIES => true,
+            RequestOptions::TIMEOUT => 60,
+            RequestOptions::HEADERS => [
+                'User-Agent' => 'App/2.1.0 (iPhone; iOS 10.2.1; Scale/3.00)',
+            ],
+        ], app('log.client'));
+
+        $this->user = $user;
+        $this->pwd = $pwd;
+        $this->token = $token;
+    }
+
+    protected function apiCall($httpMethod, $path, $query = [], $data = [], $headers = [])
+    {
+        $request_type = RequestOptions::JSON;
+
+        $extraQuery = [
+            'timestamp' => time(),
+        ];
+        $extraData = [
+            'platform' => 'ios',
+        ];
+        $extraHeaders = [
+            'token' => $this->token,
+        ];
+
+        $query = array_merge($extraQuery, $query);
+        $data = array_merge($extraData, $data);
+        $headers = array_merge($extraHeaders, $headers);
+
+        /** @var Response $response */
+        list($response, $body) = $this->_apiCall($httpMethod, $path, $query, $data, $request_type, $headers);
+        $body = $this->transformBody($response, $body);
+
+        if(!$this->isSuccess($response, $body))
+        {
+            throw new HttpClientException($this->getErrorMsg($response, $body), $response->getStatusCode());
+        }
+
+        return $body;
+    }
+
+    protected function transformBody(Response $response, $body) {
+        return \json_decode($body, true);
+    }
+
+
+    protected function isSuccess(Response $response, $response_data)
+    {
+        // TODO: Implement isSuccess() method.
+        return true;
+    }
+
+    protected function getErrorMsg(Response $response, $response_data)
+    {
+        // TODO: Implement getErrorMsg() method.
+        return $response_data['error'];
+    }
+
+    /************
+     *  Login
+     *************/
+
+    protected function isLogined()
+    {
+        throw new NotImplementedException();
+    }
+
+    protected function login()
+    {
+        throw new NotImplementedException();
+    }
+
+    /************
+     *  APIs
+     *************/
+
+
+    public function example()
+    {
+        $body = $this->apiCall(Request::METHOD_GET, '/users/maimake');
+        return $body;
+    }
+
+    public function exampleRequireLogin()
+    {
+        return $this->requireLogin(function () {
+            return $this->get('/users/maimake');
+        });
+    }
+}

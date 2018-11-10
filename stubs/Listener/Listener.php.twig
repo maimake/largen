@@ -1,0 +1,32 @@
+<?php
+
+namespace <%=namespace%>;
+
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+class <%=classname%> <% if options['queue'] %>implements ShouldQueue<% endif %>
+{
+    <% if options['queue'] %>use InteractsWithQueue;<% endif %>
+
+    /**
+     * Create the event listener.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param  <%= events %> $event
+     * @return void
+     */
+    public function handle($event)
+    {
+        //
+    }
+}

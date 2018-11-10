@@ -1,0 +1,46 @@
+<?php
+
+namespace <%=namespace%>;
+
+use Closure;
+
+class <%=classname%>
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
+    public function handle($request, Closure $next)
+    {
+        // 1. before middleware
+        // 2. router
+        // 3. after middleware
+        // 4. terminate middleware
+        //
+        // request
+        //   ↓
+        //  mid1 → mid2
+        //          ↓
+        //         router create response
+        //          ↓
+        //  mid1 ← mid2
+        //   ↓
+        //  send response
+        //   ↓
+        //  mid1 → mid2
+
+        // before all next middlewares and router
+        $response = $next($request);
+        // after all next middlewares response
+        return $response;
+    }
+
+//    public function terminate($request, $response)
+//    {
+//        // after send response.
+//        // NOTE: not the same instance, unless it's singleton
+//    }
+}

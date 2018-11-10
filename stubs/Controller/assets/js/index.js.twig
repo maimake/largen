@@ -1,0 +1,41 @@
+
+
+$(function () {
+
+  $('[data-toggle="popover"]').popover();
+  $('[data-toggle="tooltip"]').tooltip();
+
+  $('table').floatThead({
+      position: 'fixed',
+      responsiveContainer: function($table){
+          return $table.closest('.table-responsive');
+      }
+  })
+
+  $('.username-select').select2({
+    placeholder: 'Search for a User',
+    allowClear: true,
+    ajax: {
+      url: '/<%= model_plural %>/filter/username',
+      dataType: 'json',
+      delay: 500,
+      cache: true,
+      processResults: function (data, params) {
+        params.page = params.page || 1;
+
+        var res = {
+          results: data.data,
+          pagination: {
+            more: !!(data.next_page_url)
+          }
+        };
+        return res;
+      }
+    },
+
+  })
+
+
+})
+
+

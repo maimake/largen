@@ -1,0 +1,37 @@
+require('@/js/bootstrap')
+
+window.store = require('store')
+
+
+
+require('select2')
+require('floatthead')
+
+require('@/common/js/laravel')
+require('@/common/js/laravel.gridview')
+require('@/common/js/laravel.select2')
+
+
+import { sync } from 'vuex-router-sync';
+import ElementUI from 'element-ui';
+
+import router from './router';
+import store from './store'
+import App from './views/App';
+import Mock from './mock';
+Mock.bootstrap();
+
+
+window.Vue = require('vue');
+
+Vue.use(ElementUI);
+
+sync(store, router);
+
+const app = new Vue({
+  el: '#app',
+  router,
+  template: '<App/>',
+  components: {App},
+  store,
+});

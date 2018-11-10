@@ -1,0 +1,114 @@
+import Router from "vue-router"
+import Vue from "vue"
+import Meta from 'vue-meta'
+import Example from "js/components/Example"
+import Login from "js/views/auth/Login"
+import Register from "js/views/auth/Register"
+import Home from "js/views/Home"
+import Page5 from "js/views/nav1/Page5"
+import Page6 from "js/views/nav2/Page6"
+import Page7 from "js/views/nav2/Page7"
+import Page8 from "js/views/nav2/Page8"
+import Table from "js/views/nav3/Table"
+import NotFound from "js/views/NotFound"
+import Echarts from "js/views/charts/Echarts"
+
+Vue.use(Router);
+Vue.use(Meta);
+
+export default new Router({
+    routes: [
+        {
+            path: '/',
+            component: Home,
+            name: '首页',
+            redirect: 'page5',
+            children: [
+                {
+                    path: '/page5',
+                    name: '页面5',
+                    icon: 'el-icon-fa-cogs',
+                    component: Page5
+                },
+                {
+                    path: '/page6',
+                    name: '页面6',
+                    icon: 'el-icon-fa-film',
+                    component: Page6
+                },
+                {
+                    path: '/page7',
+                    name: '页面7',
+                    icon: 'el-icon-fa-inbox',
+                    component: Page7,
+                    children: [
+                        {
+                            path: '/page8',
+                            name: '页面8',
+                            component: Page8,
+                        },
+                        {
+                            path: '/page9',
+                            name: '页面9',
+                            component: Example,
+                        }
+                    ]
+                },
+                {
+                    path: '/nav1',
+                    name: '分组一',
+                    icon: 'el-icon-fa-inbox',
+                    component: {
+                        template: '<router-view></router-view>'
+                    },
+                    children: [
+                        {
+                            path: '/table',
+                            name: '列表',
+                            component: Table,
+                        }
+                    ]
+                },
+                {
+                    path: '/charts',
+                    name: '图表',
+                    icon: 'el-icon-fa-inbox',
+                    component: {
+                        template: '<router-view></router-view>'
+                    },
+                    children: [
+                        {
+                            path: '/echarts',
+                            name: 'echarts',
+                            component: Echarts,
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            path: '/example',
+            name: 'example',
+            component: Example
+        },
+        {
+            path: '/login',
+            name: 'login',
+            component: Login
+        },
+        {
+            path: '/register',
+            name: 'register',
+            component: Register
+        },
+        {
+            path: '/404',
+            name: '',
+            component: NotFound
+        },
+        {
+            path: '*',
+            redirect: {path: '/404'}
+        },
+    ]
+});

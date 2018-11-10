@@ -1,0 +1,9 @@
+<?php
+
+if (! function_exists('<%=module_alias%>_path'))
+{
+    function <%=module_alias%>_path($path = '') {
+        $base = realpath(__DIR__ . '<%= relative_path %>');
+        return join_path($base, $path);
+    }
+}

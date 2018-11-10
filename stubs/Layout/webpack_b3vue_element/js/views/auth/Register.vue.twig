@@ -1,0 +1,71 @@
+<template>
+    <div class="register hero is-fullheight is-dark">
+        <div class="hero-body">
+            <div class="container">
+                <div class="tile is-ancestor">
+                    <div class="tile is-4"></div>
+                    <div class="tile is-4 is-parent">
+                        <el-form ref="loginForm" class="tile is-child box">
+
+                            <h1 class="title is-5 has-text-centered">注册新账号</h1>
+                            <el-form-item>
+                                <el-input type="text" placeholder="邮箱"></el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-input type="text" placeholder="昵称"></el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-input type="password" placeholder="密码"></el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-input type="password" placeholder="确认密码"></el-input>
+                            </el-form-item>
+
+                            <el-form-item>
+                                <el-button type="primary" style="width:100%;">注册</el-button>
+                                <el-checkbox checked> 同意"服务条款"和"隐私权相关政策"</el-checkbox>
+                            </el-form-item>
+
+                            <div class="login">
+                                <router-link to="/login">已有账号？去登录</router-link>
+                            </div>
+
+                        </el-form>
+                    </div>
+                    <div class="tile is-4"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</template>
+
+<script>
+    export default {
+        mounted() {
+            console.log('Component mounted.')
+        },
+        metaInfo: {
+            title: 'Register'
+        }
+    }
+</script>
+
+<style lang="scss" scoped>
+    .register {
+        background: url("/images/bg.jpg") no-repeat center top;
+        color: whitesmoke;
+        .el-checkbox{
+            color: whitesmoke;
+        }
+        .box {
+            background: rgba(0,0,0,0.5);
+        }
+        .login {
+            font-size: 12px;
+            text-align: center;
+            color: whitesmoke;
+        }
+    }
+</style>

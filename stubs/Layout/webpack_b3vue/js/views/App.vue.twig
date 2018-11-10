@@ -1,0 +1,27 @@
+<template>
+    <div id="app">
+        <router-view></router-view>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: 'app',
+        metaInfo: {
+            title: 'Default Title',
+            titleTemplate: '%s | My Awesome Webapp',
+            htmlAttrs: {
+                lang: 'zh',
+                foo: 'bar',
+                amp: undefined
+            },
+            bodyAttrs: {
+                bar: 'baz'
+            }
+        }
+    }
+</script>
+
+<style lang="scss">
+
+</style>

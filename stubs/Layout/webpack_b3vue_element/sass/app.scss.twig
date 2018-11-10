@@ -1,0 +1,27 @@
+
+// Fonts
+@import url("//fonts.googleapis.cnpmjs.org/css?family=Raleway:300,400,600");
+
+// Variables
+@import "variables";
+
+// Bootstrap
+//@import "~bootstrap-sass/assets/stylesheets/bootstrap";
+@import "~bulma/bulma";
+
+// element-ui
+@import "~element-ui/lib/theme-chalk/index.css";
+
+// 必须在 theme-default/index 后面
+[class^="el-icon-fa"], [class*=" el-icon-fa"] {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome!important;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+};
+
+// 修改默认的字体前缀 fa 为 el-icon-fa
+$fa-css-prefix: el-icon-fa;
+@import "~font-awesome/scss/font-awesome";

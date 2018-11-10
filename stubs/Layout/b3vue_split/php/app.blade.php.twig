@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="{{ app()->getLocale() }}">
+<head>
+
+    @include('layouts.<%= name %>.meta')
+
+    <title>{{$title}}</title>
+
+    @include('layouts.<%= name %>.css')
+
+    @stack('styles')
+
+    @include('layouts.<%= name %>.shim')
+
+</head>
+
+<body>
+<div id="app">
+    <header>
+        @include('layouts.<%= name %>.nav')
+    </header>
+
+    <main>
+        @yield('content')
+    </main>
+
+    <footer class="container">
+        @include('layouts.<%= name %>.bottom')
+    </footer>
+</div>
+
+    @include('layouts.<%= name %>.scripts')
+
+    @stack('scripts')
+
+</body>
+</html>

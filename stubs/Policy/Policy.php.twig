@@ -1,0 +1,47 @@
+<?php
+
+namespace <%=namespace%>;
+
+use App\User;
+use <%= model_class %>;
+use Illuminate\Auth\Access\HandlesAuthorization;
+
+class <%=classname%>
+{
+    use HandlesAuthorization;
+
+    public function before($user, $ability)
+    {
+//        if ($user->isSuperAdmin()) {
+//            return true;
+//        }
+    }
+
+    /**
+     * Determine whether the user can create <%= model_plural %>.
+     *
+     * @param  \App\User  $user
+     * @return mixed
+     */
+    public function create(User $user)
+    {
+        //
+    }
+
+<% for action in actions %>
+
+    /**
+     * Determine whether the user can <%= action %> the post.
+     *
+     * @param  \App\User  $user
+     * @param  <%= model_name %>  $<%= model_singular %>
+     * @return mixed
+     */
+    public function <%= action %>(User $user, <%= model_name %> $<%= model_singular %>)
+    {
+        //
+    }
+
+<% endfor %>
+
+}

@@ -1,0 +1,76 @@
+<?php
+
+namespace <%=namespace%>;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+<% if options['soft-delete'] %>
+use Illuminate\Database\Eloquent\SoftDeletes;
+<% endif %>
+
+class <%=classname%> extends Model
+{
+<% if options['soft-delete'] %>
+    use SoftDeletes;
+<% endif %>
+
+//    protected $table = '<%= table %>';
+
+    protected $guarded = ['id'];
+
+//    protected $fillable = [];
+
+//    protected $hidden = [
+//        'password',
+//    ];
+
+    /********************
+     * Types
+     *******************/
+
+
+//    protected $casts = [
+//      'json_col' => 'array',
+//    ];
+
+
+    /********************
+     * Append attributes
+     *******************/
+
+//    protected $appends = ['first_name'];
+//
+//    public function getFirstNameAttribute($value)
+//    {
+//        return ucfirst($value);
+//    }
+//
+//    public function setFirstNameAttribute($value)
+//    {
+//        $this->attributes['first_name'] = strtolower($value);
+//    }
+
+    public function getPageTitleAttribute()
+    {
+        return $this-><%= first_column %>;
+    }
+
+    /********************
+     * Relations
+     *******************/
+
+<% if has_user %>
+    public function user() {
+        return $this->belongsTo(App\User::class);
+    }
+<% endif %>
+
+    /********************
+     * Scopes
+     *******************/
+
+//    public function scopeOfType(Builder $query, $type)
+//    {
+//        return $query->where('type', $type);
+//    }
+}

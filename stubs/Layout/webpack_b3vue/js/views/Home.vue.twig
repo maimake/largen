@@ -1,0 +1,27 @@
+<template>
+    <router-view></router-view>
+</template>
+
+<script>
+    export default {
+        data() {
+            return {
+            }
+        },
+        mounted() {
+            console.log('Route: ', this.$route.matched);
+        },
+        metaInfo: {
+            title: 'Home'
+        },
+        methods: {
+        }
+
+    }
+</script>
+
+<style lang="scss" scoped>
+
+    @import "~sass_vars";
+
+</style>

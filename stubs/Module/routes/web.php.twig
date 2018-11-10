@@ -1,0 +1,9 @@
+<?php
+
+Route::group(['middleware' => 'web', 'prefix' => '<%=module_alias%>', 'namespace' => '<%=ns_controller%>'], function()
+{
+    Route::get('/', function () {
+        $module_name = config('<%=module_alias%>.name');
+        return response("<h1>Module '$module_name' is WORKING</h1>");
+    });
+});

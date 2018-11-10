@@ -1,0 +1,128 @@
+<?php
+
+namespace <%= namespace %>;
+
+<% if model_classname -%>
+use <%= model_classname %>;
+<% endif %>
+use <%= request_full_class_name %>;
+use <%= search_request_full_class_name %>;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
+
+class <%= classname %> extends Controller
+{
+
+    public function __construct()
+    {
+        $this->middleware(['auth'])->except('index', 'show', 'searchFilter');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param <%= search_request_class_name %> $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(<%= search_request_class_name %> $request)
+    {
+        $data = $request->toData();
+        $query = $request->getSearchModel()->search(<%= model_name %>::query());
+        $data['<%= model_plural %>'] = $query->paginate()->appends($request->getRequestData());
+
+        return view('<%= view_namespace %><%= model_plural %>.index', $data);
+    }
+
+    /**
+     * Ajax search filters by key. The filter value will be used to filter index data.
+     * @param Request $request
+     * @param         $filter_name
+     *
+     * @return mixed
+     */
+    public function searchFilter(Request $request, $filter_name)
+    {
+        $filter_key = $request->get('q', '');
+        return null;
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('<%= view_namespace %><%= model_plural %>.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  <%= request_class_name %>  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(<%= request_class_name %> $request)
+    {
+        $<%= model_singular %> = new <%= model_name %>($request->validated());
+        $<%= model_singular %>->user()->associate(Auth::user());
+        $<%= model_singular %>->save();
+
+        return redirect()->route('<%= model_plural %>.index')
+            ->with('flash_message', "<%= model_plural %> Created");
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  <%= model_name %> $<%= model_singular %>
+     * @return \Illuminate\Http\Response
+     */
+    public function show(<%= model_name %> $<%= model_singular %>)
+    {
+        return view('<%= view_namespace %><%= model_plural %>.show', compact('<%= model_singular %>'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  <%= model_name %> $<%= model_singular %>
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(<%= model_name %> $<%= model_singular %>)
+    {
+        return view('<%= view_namespace %><%= model_plural %>.edit', compact('<%= model_singular %>'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  <%= request_class_name %>  $request
+     * @param  <%= model_name %> $<%= model_singular %>
+     * @return \Illuminate\Http\Response
+     */
+    public function update(<%= request_class_name %> $request, <%= model_name %> $<%= model_singular %>)
+    {
+        $<%= model_singular %>->fill($request->validated());
+        $<%= model_singular %>->save();
+        return redirect()->route('<%= model_plural %>.show', $<%= model_singular %>->id)
+            ->with('flash_message', "<%= model_plural %> Updated");
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  <%= model_name %> $<%= model_singular %>
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(<%= model_name %> $<%= model_singular %>)
+    {
+        $<%= model_singular %>->delete();
+
+        return redirect()->route('<%= model_plural %>.index')
+            ->with('flash_message', "<%= model_plural %> Deleted");
+    }
+}

@@ -1,0 +1,37 @@
+server {
+        listen <%= options['port'] %>;
+        listen [::]:<%= options['port'] %>;
+        root <%= root %>;
+        server_name <%= server_name %>;
+        index index.html index.php;
+
+
+        add_header X-Frame-Options "SAMEORIGIN";
+        add_header X-XSS-Protection "1; mode=block";
+        add_header X-Content-Type-Options "nosniff";
+
+
+        charset utf-8;
+
+        location / {
+                try_files $uri/ $uri /index.php$is_args$query_string;
+        }
+
+
+        location = /favicon.ico { access_log off; log_not_found off; }
+        location = /robots.txt  { access_log off; log_not_found off; }
+
+        error_page 404 /index.php;
+
+        location ~ \.php$ {
+                try_files $uri =404;
+                fastcgi_pass 127.0.0.1:9000;
+                fastcgi_index index.php;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                include fastcgi_params;
+        }
+
+        location ~ /\.(?!well-known).* {
+            deny all;
+        }
+}

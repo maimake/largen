@@ -1,0 +1,149 @@
+<?php
+
+/**
+ * @var \Illuminate\Pagination\LengthAwarePaginator $<%= model_plural %>
+ * @var <%= model_classname %> $<%= model_singular %>
+ */
+
+$title = '<%= model_plural %>';
+$breadcrumbs[] = $title;
+
+?>
+
+
+@push('styles')
+<link href="{{ mix2('css/pages/<%= model_plural %>/index.css') }}" rel="stylesheet">
+@endpush
+
+@push('scripts')
+<script src="{{ mix2('js/pages/<%= model_plural %>/index.js') }}"></script>
+@endpush
+
+
+{{--------------------------------------
+  Template
+  --------------------------------------}}
+
+<% if layout %>
+@extends('layouts<%= layout %>.app')
+<% else %>
+@extends('layouts.app')
+<% endif %>
+
+@section('content')
+    <div class="<%= model_singular %>-index container">
+
+        <h1>{{$title}}</h1>
+
+        @include('<%= model_plural %>._search', ['<%= model_singular %>' => $searchModel])
+
+        <p><a href="{{route('<%= model_plural %>.create')}}" class="btn btn-success">Create <%= model_name %></a></p>
+
+        <div class="summary">Showing <b>{{$<%= model_plural %>->firstItem()}}</b>-<b>{{$<%= model_plural %>->lastItem()}}</b> of <b>{{$<%= model_plural %>->total()}}</b> items</div>
+
+
+        <div class="table-responsive fixed-table-body" id="main-grid">
+          <table class="table table-bordered table-striped min-first min-last">
+            <thead class="thead-bg">
+            <tr>
+              <th>#</th>
+              <% if has_user %>
+              <th>{{sort_link('username', 'User')}}</th>
+              <% endif %>
+              <% for column in columns %>
+              <th>{{sort_link('<%= column %>', humanize_case('<%= column %>'))}}</th>
+              <% endfor %>
+              <th></th>
+            </tr>
+            <tr class="filters">
+              <td></td>
+              <% if has_user %>
+              <td>
+                <div>
+                  <select class="form-control username-select" name="searchModel[username]" style="width: 100%">
+                    <option></option>
+                    @isset($searchModel->username)
+                    <option selected>{{$searchModel->username}}</option>
+                    @endisset
+                  </select>
+                </div>
+              </td>
+              <% endif %>
+              <% for column in columns %>
+              <td>
+                <div class="input-group" style="width: 100%">
+                  <input type="text" class="form-control" name="searchModel[<%= column %>]"
+                         value="{{$searchModel-><%= column %>}}">
+                  <span class="input-group-btn hidden-xs">
+                                      <a tabindex="0"
+                                         class="btn btn-default filter-desc"
+                                         role="button">
+                                          <i class="glyphicon glyphicon-question-sign"></i>
+                                      </a>
+                                  </span>
+                </div>
+              </td>
+              <% endfor %>
+
+              <td></td>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($<%= model_plural %> as $key => $<%= model_singular %>)
+            <tr>
+              <td>{{$<%= model_plural %>->firstItem() + $key}}</td>
+              <% if has_user %>
+              <td>{{$<%= model_singular %>->user->name}}</td>
+              <% endif %>
+              <% for column in columns %>
+              <td>{{$<%= model_singular %>-><%= column %>}}</td>
+              <% endfor %>
+              <td>
+                <a href="{{route('<%= model_plural %>.show', [$<%= model_singular %>->id])}}"><i class="glyphicon glyphicon-eye-open"></i></a>
+                <a href="{{route('<%= model_plural %>.edit', [$<%= model_singular %>->id])}}"><i class="glyphicon glyphicon-pencil"></i></a>
+                <a href="{{route('<%= model_plural %>.destroy', [$<%= model_singular %>->id])}}" data-method="DELETE" data-confirm="Are you sure you want to delete this item?"><i class="glyphicon glyphicon-trash"></i></a>
+              </td>
+            </tr>
+            @endforeach
+            </tbody>
+          </table>
+        </div>
+        {!! $<%= model_plural %>->links() !!}
+      </div>
+      @include('common.filter_desc')
+@endsection
+
+
+
+{{--------------------------------------
+  Stylesheets
+  --------------------------------------}}
+
+@push('styles')
+
+<style>
+
+  .thead-bg{
+    background: #fff;
+  }
+
+</style>
+
+@endpush
+
+
+{{--------------------------------------
+  Javascripts
+  --------------------------------------}}
+
+@push('scripts')
+
+<script>
+
+  $('#main-grid').laGridView({
+    filterUrl: '{!! Request::fullUrl() !!}',
+    filterSelector: '#main-grid .filters input, #main-grid .filters select'
+  });
+
+</script>
+@endpush

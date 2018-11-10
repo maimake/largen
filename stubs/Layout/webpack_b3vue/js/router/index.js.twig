@@ -1,0 +1,56 @@
+import Router from "vue-router"
+import Vue from "vue"
+import Meta from 'vue-meta'
+
+import Example from "js/components/Example"
+
+import Home from "js/views/Home"
+import NotFound from "js/views/NotFound"
+
+Vue.use(Router);
+Vue.use(Meta);
+
+
+export default new Router({
+    routes: [
+        {
+            path: '/',
+            component: Home,
+            name: 'Home',
+            redirect: 'haha',
+            children: [
+                {
+                    path: 'haha',
+                    name: 'haha',
+                    component: {
+                        template: '<div>😆😆😆</div>'
+                    },
+                },
+            ]
+        },
+        {
+            path: '/example',
+            name: 'example',
+            component: Example
+        },
+        // {
+        //     path: '/login',
+        //     name: 'login',
+        //     component: Login
+        // },
+        // {
+        //     path: '/register',
+        //     name: 'register',
+        //     component: Register
+        // },
+        {
+            path: '/404',
+            name: '',
+            component: NotFound
+        },
+        {
+            path: '*',
+            redirect: {path: '/404'}
+        },
+    ]
+});

@@ -1,0 +1,36 @@
+<template>
+    <section>
+        <h1>vuex 测试</h1>
+        Clicked: {{ getCount }} times
+        <button @click="increment">+</button>
+        <button @click="decrement">-</button>
+    </section>
+</template>
+
+<script>
+
+    import {mapGetters, mapActions} from 'vuex'
+
+    const abc = ['eheh', 'shit'];
+
+    export default {
+        data() {
+            return {}
+        },
+        mounted() {
+
+        },
+        computed: {
+            ...mapGetters(['getCount'])
+        },
+        methods: {
+            ...mapActions([
+                'increment',
+                'decrement'
+            ])
+        }
+    }
+
+
+</script>
+

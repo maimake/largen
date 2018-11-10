@@ -1,0 +1,43 @@
+<?php
+
+<% if namespace is not empty %>
+namespace <%=namespace%>;
+<% endif %>
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class <%=classname%> extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        DB::transaction(function () {
+            Schema::create('<%= options['table'] %>', function (Blueprint $table) {
+                $table->increments('id');
+                <%= up %>
+                $table->timestamps();
+<% if options['soft-delete'] %>
+                $table->softDeletes();
+<% endif %>
+            });
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        DB::transaction(function () {
+            <%= down %>
+        });
+    }
+}

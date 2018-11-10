@@ -1,0 +1,38 @@
+{
+    "name": "",
+    "description": "",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "mai",
+            "email": "yshxinjian@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">= 7.0",
+        "laravel/framework": "^5.0,<5.6"
+    },
+    "autoload": {
+        "psr-4": {
+        },
+        "files": [
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+            ],
+            "aliases": [
+            ]
+        }
+    },
+    "require-dev": {
+        "orchestra/testbench": "^3.5",
+        "phpunit/phpunit": "^6.5"
+    }
+}

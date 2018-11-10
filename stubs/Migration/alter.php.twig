@@ -1,0 +1,64 @@
+<?php
+
+<% if namespace is not empty %>
+namespace <%=namespace%>;
+<% endif %>
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class <%=classname%> extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+
+        // =======================================
+        // Examples
+        // =======================================
+
+        // $table->string('new_col')
+        //     ->comment('new col');
+        //
+        // $table->string('name', 50)->change();
+        // $table->renameColumn('from', 'to');
+        //
+        // $table->unique(['email']);
+        // $table->index(['name']);
+
+        DB::transaction(function () {
+            Schema::table('<%= options['table'] %>', function (Blueprint $table) {
+                <%= up %>
+            });
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        // =======================================
+        // Examples
+        // =======================================
+
+        // $table->dropColumn(['new_col']);
+        // $table->string('name', 25)->change();
+        // $table->renameColumn('to', 'from');
+        // $table->dropUnique('users_email_unique');
+        // $table->dropIndex('name_index');
+
+        DB::transaction(function () {
+            Schema::table('<%= options['table'] %>', function (Blueprint $table) {
+                <%= down %>
+            });
+        });
+    }
+}

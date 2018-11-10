@@ -1,0 +1,23 @@
+<?php
+
+$title = 'Create <%= model_name %>';
+$breadcrumbs[] = ['label' => '<%= model_plural %>', 'url' => route('<%= model_plural %>.index')];
+$breadcrumbs[] = $title;
+
+?>
+
+<% if layout %>
+@extends('layouts<%= layout %>.app')
+<% else %>
+@extends('layouts.app')
+<% endif %>
+
+@section('content')
+<div class="<%= model_plural %>-create container">
+
+  <h1>{{$title}}</h1>
+
+  @include('<%= model_plural %>._form')
+
+</div>
+@endsection
