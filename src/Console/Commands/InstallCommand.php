@@ -65,6 +65,7 @@ class InstallCommand extends GeneratorCommand
     private function copyTemplateFiles()
     {
         $this->templateDir('', base_path(), null, true);
+        $this->systemOrFail('chmod -R +x scripts');
 
         $this->insertAppProvider('App\\Providers\\BladeServiceProvider');
         $this->insertAppProvider('App\\Providers\\ComposerServiceProvider');
@@ -152,24 +153,24 @@ class InstallCommand extends GeneratorCommand
 
     private function yarnInstall()
     {
-//        $this->changeJsonFile(base_path('package.json'), function ($json) {
-//
+        $this->changeJsonFile(base_path('package.json'), function ($json) {
+
 //            $json['scripts']['format'] = "prettier --write 'resources/assets/**/*.{js,css,less,scss}' 'public/static/**/*.{js,css,less,scss}'";
-//            $json['scripts']['check-hot-port'] = "bash ./webpack/scripts/check_ports.sh";
-//            $json['scripts']['hot'] = "npm run check-hot-port && cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --progress --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js";
-//
-//            $json['scripts']["start"] = "npm run hot-web";
+            $json['scripts']['hot'] = "cross-env NODE_ENV=development DEV_PORT=`node scripts/get_free_port.js` node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js";
+
+            $json['scripts']["start"] = "npm run hot";
 //            $json['scripts']["dev-all"] = "APP=all npm run dev";
 //            $json['scripts']["prod-all"] = "APP=all npm run prod";
 //            $json['scripts']["watch-all"] = "node webpack/webpack.mix.all.js";
 //            $json['scripts']["hot-web"] = "APP=web npm run watch-all";
-//
-//            return $json;
-//        });
+
+            return $json;
+        });
 
 
         $js_packages = [
 //            'prettier',
+            'portfinder',
             'ini',
             'browser-sync',
             'browser-sync-webpack-plugin',

@@ -1,6 +1,47 @@
 const mix = require('laravel-mix');
 const ini = require('ini');
 const fs = require('fs');
+const _ = require('lodash');
+
+exports.resolvePath = function (dir) {
+    return path.join(__dirname, '../' + dir);
+};
+
+
+Mix.listen('configReady', webpackConfig => {
+    // console.log(webpackConfig);
+    // console.log(webpackConfig['plugins'][6]);
+    console.log(`webpack-dev-server URL: htp://${webpackConfig.devServer.host}:${webpackConfig.devServer.port}/webpack-dev-server`);
+});
+
+
+let defaultAlias = {
+    resolve: {
+        extensions: ['.scss', '.json'],
+        alias: {
+            '@': exports.resolvePath('resources/assets'),
+        }
+    },
+};
+
+let webpackConfig = {
+};
+
+mix.webpackConfig(_.merge(defaultAlias, webpackConfig));
+
+if (mix.config.hmr)
+{
+    mix.options({
+        hmrOptions: {
+            port: process.env.DEV_PORT,
+        }
+    })
+
+} else {
+    // version by query string
+    mix.version();
+}
+
 
 /*
  |--------------------------------------------------------------------------
@@ -34,3 +75,5 @@ if (process.env.APP_ENV === 'local') {
         ],
     });
 }
+
+
