@@ -15,7 +15,10 @@ class UsersTableAddApiToken extends Migration
     {
         DB::transaction(function () {
             Schema::table('users', function (Blueprint $table) {
-                $table->string('api_token')->nullable()->after('remember_token')
+                $table->string('api_token', 64)
+                    ->unique()
+                    ->nullable()
+                    ->after('remember_token')
                     ->comment('Use it only when auth:api driver is token (TokenGuard).');
             });
         });

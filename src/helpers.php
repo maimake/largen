@@ -3,6 +3,8 @@
 //use Coduo\PHPHumanizer\StringHumanizer;
 use function GuzzleHttp\Psr7\build_query;
 use function GuzzleHttp\Psr7\parse_query;
+use Illuminate\Encryption\Encrypter;
+use Maimake\Largen\Support\Log\LogManager;
 use Psr\Http\Message\UriInterface;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -28,13 +30,13 @@ if (! function_exists('largen_path'))
 //    }
 //}
 //
-//if (! function_exists('dot_case'))
-//{
-//    function dot_case($val) {
-//        return preg_replace("/[\\s]+/", ".", trim($val));
-//    }
-//}
-//
+if (! function_exists('dot_case'))
+{
+    function dot_case($val) {
+        return preg_replace("/[\\s]+/", ".", trim($val));
+    }
+}
+
 if (! function_exists('namespace_case'))
 {
     function namespace_case($val) {
@@ -390,27 +392,63 @@ if (! function_exists('pretty_json'))
     }
 }
 
-if (! function_exists('array_wrap'))
-{
-    function array_wrap($value) {
-        if ($value instanceof Collection)
-            return $value->toArray();
-        else
-            return Arr::wrap($value);
+if (! function_exists('get_logger')) {
+
+    function get_logger($name)
+    {
+        if (!app()->bound("log.$name")) {
+            app()->singleton("log.$name", function ($app) use ($name) {
+                return new LogManager($app, $name);
+            });
+        }
+        return app("log.$name");
     }
 }
 
-if (! function_exists('create_daily_log_config'))
-{
-    function create_daily_log_config($name, $dir=null, $level='debug', $days=7) {
 
-        $dir = $dir ?? storage_path('logs');
-        $path = join_path($dir, "$name.log");
-        return [
-            'driver' => 'daily',
-            'path' => $path,
-            'level' => $level,
-            'days' => $days,
-        ];
+if (! function_exists('token_generate'))
+{
+    function token_generate() {
+        return md5(Encrypter::generateKey(config('app.cipher'))) . md5(Str::orderedUuid());
+    }
+}
+
+
+if (! function_exists('load_api_by_versions'))
+{
+    function load_api_by_versions($api_dir, $fallback = true) {
+
+        $api_dir = path_slash($api_dir);
+        $files = collect(app('files')->glob($api_dir . "**/*.php"));
+        $files = $files->mapToGroups(function ($item) use ($api_dir) {
+            $g = str_after($item, $api_dir);
+            $g = str_before($g, "/");
+            return [$g => $item];
+        });
+
+        if ($fallback) {
+
+            $vers = $files->keys()->sort('version_compare')->values();
+
+            for ($i = 0; $i < $vers->count(); $i++) {
+                $ver = $vers->get($i);
+                $route = Route::prefix($ver);
+                for ($j = 0; $j <= $i; $j++) {
+                    $phps = $files->get($vers->get($j));
+                    foreach ($phps as $php) {
+                        $route->group($php);
+                    }
+                }
+            }
+
+        } else {
+
+            $files->each(function($item, $key) {
+                $route = Route::prefix($key);
+                foreach ($item as $php) {
+                    $route->group($php);
+                }
+            });
+        }
     }
 }

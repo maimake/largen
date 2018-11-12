@@ -51,8 +51,9 @@ class VhostCommand extends GeneratorCommand
 
         $this->changeEnvFile('APP_URL', "http://$server_name");
 
-        $this->systemSudoOrFail("echo '127.0.0.1 $server_name' >> /etc/hosts");
+        $this->info('Restarting nginx ...');
 
+        $this->systemSudoOrFail("echo '127.0.0.1 $server_name' >> /etc/hosts");
         $this->systemOrFail("sudo nginx -s reload");
 
         $this->alert("http://$server_name");

@@ -21,6 +21,7 @@ class InstallCommand extends GeneratorCommand
         $this->copyTemplateFiles();
 
         $this->changeEnv();
+        $this->changeEmail();
         $this->changeLocale();
         $this->changeTimezone();
         $this->changeLogger();
@@ -53,6 +54,7 @@ class InstallCommand extends GeneratorCommand
         $this->systemOrFail('chmod +x artisan');
         $this->systemOrFail('chmod -R 777 storage');
         $this->systemOrFail('chmod -R 777 bootstrap/cache');
+        $this->systemOrFail('./artisan storage:link');
         $this->gitCommit('init project');
     }
 
@@ -69,6 +71,7 @@ class InstallCommand extends GeneratorCommand
 
         $this->insertAppProvider('App\\Providers\\BladeServiceProvider');
         $this->insertAppProvider('App\\Providers\\ComposerServiceProvider');
+        $this->insertAppProvider('App\\Providers\\ObserverServiceProvider');
 
         $this->insertToFile(app_path('User.php'), " 'api_token',", "'remember_token',", false, "after", false);
     }
@@ -105,13 +108,24 @@ class InstallCommand extends GeneratorCommand
     private function changeLogger()
     {
         $this->replaceInFile(config_path('logging.php'), "'channels' => ['daily']", "'channels' => ['single']");
-        $this->insertInArrayToFile(config_path('logging.php'), "\n        'client' => create_daily_log_config('client'),", "'channels' =>");
     }
 
     private function changeSqliteDbPath()
     {
         $this->ignoreDir(storage_path('database'));
         $this->replaceInFile(config_path('database.php'), "'database' => resolve_path(env('DB_DATABASE', 'database.sqlite'), '@storage_path/database')", "'database' => env('DB_DATABASE', database_path('database.sqlite'))");
+    }
+
+    private function changeEmail()
+    {
+        $this->insertToFile(base_path('.env'), "MAIL_FROM_ADDRESS=null", "MAIL_PORT");
+        $this->insertToFile(base_path('.env'), "MAIL_FROM_NAME=null", "MAIL_FROM_ADDRESS");
+
+        $this->insertToFile(base_path('.env.example'), "MAIL_FROM_ADDRESS=null", "MAIL_PORT");
+        $this->insertToFile(base_path('.env.example'), "MAIL_FROM_NAME=null", "MAIL_FROM_ADDRESS");
+
+        $this->replaceInFile(config_path('mail.php'), "'address' => env('MAIL_FROM_ADDRESS', env('MAIL_USERNAME'))", "'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com')");
+        $this->replaceInFile(config_path('mail.php'), "'name' => env('MAIL_FROM_NAME', env('APP_NAME'))", "'name' => env('MAIL_FROM_NAME', 'Example')");
     }
 
     private function activeUserSeeder()
@@ -137,7 +151,15 @@ class InstallCommand extends GeneratorCommand
 
     private function composerRequire()
     {
-        foreach (['debugbar', 'laracasts/flash', 'laravelcollective/html', 'simplesoftwareio/simple-qrcode'/*, 'ide_helper'*/] as $item)
+        foreach ([
+                     'debugbar',
+                     'laracasts/flash',
+                     'laravelcollective/html',
+                     'simplesoftwareio/simple-qrcode',
+//                     'ide_helper',
+                     'moontoast/math',
+                     'fedeisas/laravel-mail-css-inliner',
+                 ] as $item)
         {
             $this->call('largen:composer', ['name' => $item]);
             $this->gitCommit("require $item");

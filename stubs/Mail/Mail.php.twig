@@ -28,6 +28,6 @@ class <%=classname%> extends Mailable
      */
     public function build()
     {
-        return $this->markdown('<%= view_name %>');
+        return $this-><% if options['type'] == 'markdown' %>markdown<% else %>view<% endif %>('<%= view_name %>');
     }
 }

@@ -1,10 +1,12 @@
 <?php
 
-namespace <%=namespace%>;
+namespace App\Providers;
+use App\User;
+use App\Observers\UserObserver;
 
-use Maimake\Largen\Support\Providers\LogServiceProvider as ServiceProvider;
+use Illuminate\Support\ServiceProvider;
 
-class LogServiceProvider extends ServiceProvider
+class ObserverServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -14,6 +16,7 @@ class LogServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        User::observe(UserObserver::class);
     }
 
     /**
@@ -23,8 +26,6 @@ class LogServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        parent::register();
-
-//        $this->createCustomLogger('client'); // get singleton by app('log.client')
+        //
     }
 }
