@@ -74,6 +74,7 @@ class InstallCommand extends GeneratorCommand
         $this->insertAppProvider('App\\Providers\\ObserverServiceProvider');
 
         $this->insertToFile(app_path('User.php'), " 'api_token',", "'remember_token',", false, "after", false);
+        $this->replaceInFile(resource_path('views/layouts/app.blade.php'), "mix(", "asset(");
     }
 
 
@@ -158,6 +159,7 @@ class InstallCommand extends GeneratorCommand
                      'simplesoftwareio/simple-qrcode',
 //                     'ide_helper',
                      'moontoast/math',
+                     'simplesoftwareio/simple-qrcode',
                      'fedeisas/laravel-mail-css-inliner',
                  ] as $item)
         {

@@ -174,36 +174,8 @@ if (! function_exists('resolve_path'))
         }
     }
 }
-//
-//
-//if (! function_exists('mix2'))
-//{
-//    /**
-//     * Same as mix(), except the url in hot mode
-//     * @param string $path
-//     * @param string $manifestDirectory
-//     *
-//     * @return HtmlString
-//     */
-//    function mix2(string $path, string $manifestDirectory = '') {
-//        static $manifests = [];
-//
-//        if (! Str::startsWith($path, '/')) {
-//            $path = "/{$path}";
-//        }
-//
-//        if ($manifestDirectory && ! Str::startsWith($manifestDirectory, '/')) {
-//            $manifestDirectory = "/{$manifestDirectory}";
-//        }
-//
-//        if (file_exists(public_path($manifestDirectory.'/hot'))) {
-//            return new HtmlString("//localhost:8080{$manifestDirectory}{$path}");// Only changed this line with insert $manifestDirectory
-//        }
-//
-//        return mix($path, $manifestDirectory);
-//    }
-//}
-//
+
+
 //
 //if (! function_exists('set_default_t')) {
 //
@@ -432,7 +404,7 @@ if (! function_exists('load_api_by_versions'))
 
             for ($i = 0; $i < $vers->count(); $i++) {
                 $ver = $vers->get($i);
-                $route = Route::prefix($ver);
+                $route = Route::prefix($ver)->namespace("Api\\{$ver}");
                 for ($j = 0; $j <= $i; $j++) {
                     $phps = $files->get($vers->get($j));
                     foreach ($phps as $php) {
@@ -443,8 +415,8 @@ if (! function_exists('load_api_by_versions'))
 
         } else {
 
-            $files->each(function($item, $key) {
-                $route = Route::prefix($key);
+            $files->each(function($item, $ver) {
+                $route = Route::prefix($ver)->namespace("Api\\{$ver}");
                 foreach ($item as $php) {
                     $route->group($php);
                 }

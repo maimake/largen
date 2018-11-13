@@ -4,14 +4,24 @@ const fs = require('fs');
 const _ = require('lodash');
 
 exports.resolvePath = function (dir) {
-    return path.join(__dirname, '../' + dir);
+    return path.join(__dirname, dir);
 };
 
+
+/*
+ |--------------------------------------------------------------------------
+ | Config webpack
+ |--------------------------------------------------------------------------
+ |
+ */
 
 Mix.listen('configReady', webpackConfig => {
     // console.log(webpackConfig);
     // console.log(webpackConfig['plugins'][6]);
-    console.log(`webpack-dev-server URL: htp://${webpackConfig.devServer.host}:${webpackConfig.devServer.port}/webpack-dev-server`);
+    if (mix.config.hmr)
+    {
+        console.log(`webpack-dev-server URL: htp://${webpackConfig.devServer.host}:${webpackConfig.devServer.port}/webpack-dev-server`);
+    }
 });
 
 
@@ -19,7 +29,7 @@ let defaultAlias = {
     resolve: {
         extensions: ['.scss', '.json'],
         alias: {
-            '@': exports.resolvePath('resources/assets'),
+            '@': exports.resolvePath('resources'),
         }
     },
 };
@@ -58,6 +68,15 @@ mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css');
 
 
+
+/*
+ |--------------------------------------------------------------------------
+ | Browser sync
+ |--------------------------------------------------------------------------
+ |
+ */
+
+
 if (process.env.APP_ENV === 'local') {
     let config = ini.parse(fs.readFileSync('./.env', 'utf-8'));
     mix.browserSync({
@@ -75,5 +94,7 @@ if (process.env.APP_ENV === 'local') {
         ],
     });
 }
+
+mix.disableNotifications();
 
 

@@ -38,8 +38,7 @@ class IdeaCommand extends GeneratorCommand
 
         // interpreter_name PHP7.2
         $this->changeInterpreterName();
-
-        $this->changeEs6();
+        $this->enablePhpUnit();
     }
 
     private function checkHasIdeaProject()
@@ -53,6 +52,13 @@ class IdeaCommand extends GeneratorCommand
         $this->replaceInFile(base_path('.idea/workspace.xml'),
             '<component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" interpreter_name="'. $ver .'" />',
             '<component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />');
+    }
+
+    private function enablePhpUnit()
+    {
+        $this->replaceInFile(base_path('.idea/php.xml'),
+            '<PhpUnitSettings load_method="CUSTOM_LOADER" />',
+            '<PhpUnitSettings load_method="CUSTOM_LOADER" custom_loader_path="$PROJECT_DIR$/vendor/autoload.php" phpunit_phar_path="" />');
     }
 
     private function getModuleFilePath()
@@ -103,14 +109,6 @@ class IdeaCommand extends GeneratorCommand
             $node = $contentNode->addChild('excludeFolder');
             $node['url'] = 'file://$MODULE_DIR$/' . $path;
         }
-    }
-
-    private function changeEs6() {
-        $this->insertToFile(base_path('.idea/misc.xml'), "
-  <component name=\"JavaScriptSettings\">
-    <option name=\"languageLevel\" value=\"ES6\" />
-  </component>
-", "<project version=");
     }
 
 }

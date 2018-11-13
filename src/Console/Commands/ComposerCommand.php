@@ -31,7 +31,7 @@ class ComposerCommand extends GeneratorCommand
     {
         if (!$this->argument('name'))
         {
-            $built_in = ['ide_helper', 'debugbar', 'qrcode', 'passport', 'socialite'];
+            $built_in = ['ide_helper', 'debugbar', 'passport', 'socialite'];
             $res = $this->anticipate('Enter package name ['.implode(',', $built_in).']' , $built_in);
             $this->setArgument('name', $res);
 
@@ -120,15 +120,10 @@ class ComposerCommand extends GeneratorCommand
         $this->ignoreDir(storage_path('debugbar'));
     }
 
-//    private function qrcode()
-//    {
-//        $this->composer('simplesoftwareio/simple-qrcode', false, 'SimpleSoftwareIO\QrCode\QrCodeServiceProvider', 'QrCode', 'SimpleSoftwareIO\QrCode\Facades\QrCode');
-//    }
-
     private function passport()
     {
         // composer
-        $this->composer('laravel/passport:4.0.3', false);
+        $this->composer('laravel/passport', false);
         $config_file = join_path($this->nsPath->getPath('config'), 'auth.php');
         $this->replaceInFile($config_file, "'driver' => 'passport',", "'driver' => 'token',");
 
@@ -158,12 +153,11 @@ class ComposerCommand extends GeneratorCommand
 
         // Auth Provider
         $auth_provider_path = join_path($this->nsPath->getPath('provider'), 'AuthServiceProvider.php');
-        $this->useClassAtFileHead($auth_provider_path, "Carbon\\Carbon");
         $this->useClassAtFileHead($auth_provider_path, "Laravel\\Passport\\Passport");
         $this->insertInBlockToFile($auth_provider_path, "
         Passport::routes();
-        Passport::tokensExpireIn(Carbon::now()->addDays(15));
-        Passport::refreshTokensExpireIn(Carbon::now()->addDays(30));
+        Passport::tokensExpireIn(now()->addDays(7));
+        Passport::refreshTokensExpireIn(now()->addDays(15));
         Passport::enableImplicitGrant();
         Passport::tokensCan([
 	        'scope1' => 'Scope 1',
@@ -173,9 +167,7 @@ class ComposerCommand extends GeneratorCommand
 
 
         // route
-        $this->template('api.php', $this->nsPath->getPath('route'));
-        $api_file = join_path($this->nsPath->getPath('route'), 'api.php');
-        $this->appendToFile($api_file, "require_once __DIR__ . '/passport-api.php';");
+        $this->template('oauth.php', join_path($this->nsPath->getPath('route'), 'api/v1/oauth.php'));
 
         // views
         $this->call("vendor:publish", [
@@ -188,8 +180,8 @@ class ComposerCommand extends GeneratorCommand
         ]);
 
 
-        $assets_path = $this->nsPath->getPath('asset');
-        $files = `grep "const app = new Vue" "$assets_path" -R -l | grep "app.js"`;
+        $resource_path = $this->nsPath->getPath('resource', 'js');
+        $files = `grep "const app = new Vue" "$resource_path" -R -l | grep "app.js"`;
         $files = empty($files) ? [] : explode(PHP_EOL, trim($files));
 
         $content = "
@@ -251,7 +243,7 @@ Vue.component(
 }'");
         $this->alert("Get resource");
         $this->info("curl -X GET \\
-  $baseUrl/api/user \\
+  $baseUrl/api/v1/oauth-user \\
   -H 'Accept: application/json' \\
   -H 'Authorization: Bearer <comment>YOUR_ACCESS_TOKEN</comment>'
   ");

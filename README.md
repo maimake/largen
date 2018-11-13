@@ -173,6 +173,16 @@ sed -i '' -e '/"type": "project"/s/$/\' -e '"repositories": [{ "type": "path", "
 composer require "maimake/largen":"dev-master" 
 ```
 
+and then you can do something with many commands in this package
+
+```bash
+./artisan largen:install -q && \
+./artisan largen:env && \
+./artisan migrate --seed && \
+./artisan largen:vhost && \
+yarn start
+```
+
 
 
 
