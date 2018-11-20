@@ -48,9 +48,14 @@ class InstallCommand extends GeneratorCommand
 ///public/fonts/vendor
 //
 //!/public/**/static
+//.phpstorm.meta.php
 //";
-//
-//        $this->appendToFile(base_path('.gitignore'), $gitingore);
+        $gitingore = "
+.phpstorm.meta.php
+_ide_helper.php
+        ";
+
+        $this->appendToFile(base_path('.gitignore'), $gitingore);
         $this->systemOrFail('chmod +x artisan');
         $this->systemOrFail('chmod -R 777 storage');
         $this->systemOrFail('chmod -R 777 bootstrap/cache');
@@ -119,11 +124,11 @@ class InstallCommand extends GeneratorCommand
 
     private function changeEmail()
     {
-        $this->insertToFile(base_path('.env'), "MAIL_FROM_ADDRESS=null", "MAIL_PORT");
-        $this->insertToFile(base_path('.env'), "MAIL_FROM_NAME=null", "MAIL_FROM_ADDRESS");
+        $this->insertToFile(base_path('.env'), "MAIL_FROM_ADDRESS=null\n", "MAIL_PORT");
+        $this->insertToFile(base_path('.env'), "MAIL_FROM_NAME=null\n", "MAIL_FROM_ADDRESS");
 
-        $this->insertToFile(base_path('.env.example'), "MAIL_FROM_ADDRESS=null", "MAIL_PORT");
-        $this->insertToFile(base_path('.env.example'), "MAIL_FROM_NAME=null", "MAIL_FROM_ADDRESS");
+        $this->insertToFile(base_path('.env.example'), "MAIL_FROM_ADDRESS=null\n", "MAIL_PORT");
+        $this->insertToFile(base_path('.env.example'), "MAIL_FROM_NAME=null\n", "MAIL_FROM_ADDRESS");
 
         $this->replaceInFile(config_path('mail.php'), "'address' => env('MAIL_FROM_ADDRESS', env('MAIL_USERNAME'))", "'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com')");
         $this->replaceInFile(config_path('mail.php'), "'name' => env('MAIL_FROM_NAME', env('APP_NAME'))", "'name' => env('MAIL_FROM_NAME', 'Example')");
@@ -157,10 +162,11 @@ class InstallCommand extends GeneratorCommand
                      'laracasts/flash',
                      'laravelcollective/html',
                      'simplesoftwareio/simple-qrcode',
-//                     'ide_helper',
+                     'ide_helper',
                      'moontoast/math',
                      'simplesoftwareio/simple-qrcode',
                      'fedeisas/laravel-mail-css-inliner',
+                     'predis/predis',
                  ] as $item)
         {
             $this->call('largen:composer', ['name' => $item]);

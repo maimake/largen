@@ -210,15 +210,16 @@ Vue.component(
         {
             $this->info("\nAdd following code to register Vue components");
             $this->warn($content);
-            $this->info("Use following tags to show info");
-            $this->warn("
+        }else{
+            $this->warn("Please restart webpack building");
+        }
+
+        $this->info("Use following tags to show info");
+        $this->warn("
         <passport-clients></passport-clients>
         <passport-authorized-clients></passport-authorized-clients>
         <passport-personal-access-tokens></passport-personal-access-tokens>
             ");
-        }else{
-            $this->warn("Please restart webpack building");
-        }
 
         $client = DB::table('oauth_clients')->where([
             'personal_access_client' => 0,

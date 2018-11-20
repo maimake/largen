@@ -111,6 +111,8 @@ class EnvCommand extends GeneratorCommand
         $this->askEnv('MAIL_PORT', '587');
         $this->askEnv('MAIL_USERNAME');
         $this->askEnv('MAIL_PASSWORD');
+        $this->askEnv('MAIL_FROM_ADDRESS', env('MAIL_USERNAME'));
+        $this->askEnv('MAIL_FROM_NAME', explode('@', env('MAIL_FROM_ADDRESS') ?: env('MAIL_USERNAME'))[0]);
         $this->confirmEnv('MAIL_ENCRYPTION', true, 'tls', '');
     }
 
