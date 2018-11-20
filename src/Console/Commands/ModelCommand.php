@@ -85,7 +85,7 @@ class ModelCommand extends GeneratorCommand
         $this->createMigration();
         $this->createFactory();
         $this->createSeeder();
-        $this->createRepository();
+//        $this->createRepository();
 
         if (!Schema::hasTable($this->table))
         {
@@ -93,6 +93,7 @@ class ModelCommand extends GeneratorCommand
 
             if($this->confirm("Do you want to do 'migrate' and 'seed' right now? But please make sure you have checked the generated 'migration' and 'seeder' file.", true))
             {
+                $this->dump_autoload();
                 $this->call("migrate");
                 $this->call("db:seed", [
                     "--class" => $seederClass,

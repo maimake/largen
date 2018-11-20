@@ -22,7 +22,7 @@ abstract class Command extends BaseCommand
     {
         $this->input->setArgument($key, $value);
     }
-    
+
     // manipulate option value
     protected function setOption($key, $value)
     {
@@ -209,7 +209,7 @@ abstract class Command extends BaseCommand
                         $this->error("Foreign key($field_name) should end with '_id'. Please reEnter it again");
                         continue;
                     }
-                    $exact_type = "integer:$exact_type";
+                    $exact_type = "unsignedInteger:$exact_type";
                 }elseif ($exact_type == 'enum')
                 {
                     $items = $this->ask('Please enter the items(Separated by comma)');

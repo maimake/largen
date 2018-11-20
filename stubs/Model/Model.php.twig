@@ -61,7 +61,7 @@ class <%=classname%> extends Model
 
 <% if has_user %>
     public function user() {
-        return $this->belongsTo(App\User::class);
+        return $this->belongsTo(\App\User::class);
     }
 <% endif %>
 
