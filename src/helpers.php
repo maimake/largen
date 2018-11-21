@@ -433,3 +433,18 @@ if (! function_exists('num_code_random'))
     }
 }
 
+
+if (! function_exists('internal_request'))
+{
+    function internal_request($uri, $method = 'GET', $parameters = [], $headers = [])
+    {
+        $original_request = request();
+        $request = Request::create($uri, $method, $parameters, $original_request->cookies->all());
+        if ($headers != false) {
+            $request->headers->add(request()->headers->all());
+            $request->headers->add($headers);
+        }
+
+        return app()->handle($request);
+    }
+}
