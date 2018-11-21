@@ -60,6 +60,7 @@ _ide_helper.php
         $this->systemOrFail('chmod -R 777 storage');
         $this->systemOrFail('chmod -R 777 bootstrap/cache');
         $this->systemOrFail('./artisan storage:link');
+        $this->systemOrFail('./artisan vendor:publish --tag=laravel-pagination');
         $this->gitCommit('init project');
     }
 
