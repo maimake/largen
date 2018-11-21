@@ -424,3 +424,12 @@ if (! function_exists('load_api_by_versions'))
         }
     }
 }
+
+
+if (! function_exists('num_code_random'))
+{
+    function num_code_random($len) {
+        return str_pad(mt_rand(1, pow(10, $len) - 1), $len, '0');
+    }
+}
+

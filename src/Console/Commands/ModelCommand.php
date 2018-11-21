@@ -85,7 +85,7 @@ class ModelCommand extends GeneratorCommand
         $this->createMigration();
         $this->createFactory();
         $this->createSeeder();
-//        $this->createRepository();
+        $this->createRepository();
 
         if (!Schema::hasTable($this->table))
         {
