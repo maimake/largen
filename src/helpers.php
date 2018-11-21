@@ -404,7 +404,7 @@ if (! function_exists('load_api_by_versions'))
 
             for ($i = 0; $i < $vers->count(); $i++) {
                 $ver = $vers->get($i);
-                $route = Route::prefix($ver)->namespace("Api\\{$ver}");
+                $route = Route::prefix($ver)->namespace("Api\\" . studly_case($ver));
                 for ($j = 0; $j <= $i; $j++) {
                     $phps = $files->get($vers->get($j));
                     foreach ($phps as $php) {
@@ -416,7 +416,7 @@ if (! function_exists('load_api_by_versions'))
         } else {
 
             $files->each(function($item, $ver) {
-                $route = Route::prefix($ver)->namespace("Api\\{$ver}");
+                $route = Route::prefix($ver)->namespace("Api\\" . studly_case($ver));
                 foreach ($item as $php) {
                     $route->group($php);
                 }
