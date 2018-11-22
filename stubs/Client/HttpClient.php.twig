@@ -54,32 +54,18 @@ class <%=classname%> extends HttpClient
         try{
             /** @var Response $response */
             list($response, $body) = $this->_apiCall($httpMethod, $path, $query, $data, $request_type, $headers);
-            $body = $this->transformBody($response, $body);
+
+            if(!$this->isSuccess($response, $body))
+            {
+                $body = $this->handleLogicException($response, $body);
+            }
         } catch (ClientException $e) {
             $response = $e->getResponse();
-            $body = $response->getBody();
-            $body->rewind();
-            $body = $this->transformBody($response, $body);
+            $body = $this->getBodyFromResponse($response);
             $body = $this->handleClientException($response, $body);
         }
 
-        if(!$this->isSuccess($response, $body))
-        {
-            $body = $this->handleLogicException($response, $body);
-        }
-
         return $body;
-    }
-
-
-    protected function transformBody(ResponseInterface $response, $body) {
-        if (array_first($response->getHeader('Content-Type')) == 'application/json')
-        {
-            return \json_decode($body, true);
-        }
-        else {
-            return $body;
-        }
     }
 
     protected function isSuccess(Response $response, $response_data)

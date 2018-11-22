@@ -95,14 +95,29 @@ abstract class HttpClientBase
         ];
 
         $response = $this->httpClient->request($httpMethod, $path, $option);
-        $response->getBody()->rewind();
-        $response_data = $response->getBody()->getContents();
+        $response_data = $this->getBodyFromResponse($response);
         return [$response, $response_data];
     }
 
-    abstract protected function isSuccess(Response $response, $response_data);
-    abstract protected function getErrorMsg(Response $response, $response_data);
+    abstract protected function isSuccess(ResponseInterface $response, $response_data);
+    abstract protected function getErrorMsg(ResponseInterface $response, $response_data);
 
+    protected function transformBody(ResponseInterface $response, $body) {
+        if (array_first($response->getHeader('Content-Type')) == 'application/json')
+        {
+            return \json_decode($body, true);
+        }
+        else {
+            return $body;
+        }
+    }
+
+    protected function getBodyFromResponse(ResponseInterface $response)
+    {
+        $response->getBody()->rewind();
+        $body = $response->getBody()->getContents();
+        return $this->transformBody($response, $body);
+    }
 
     protected function modifyRequest(RequestInterface $request)
     {
