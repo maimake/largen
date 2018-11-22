@@ -24,6 +24,7 @@ class <%=classname%> extends HttpClient
             RequestOptions::COOKIES => true,
             RequestOptions::TIMEOUT => 60,
             RequestOptions::HEADERS => [
+                'Accept' => 'application/json',
                 'User-Agent' => 'App/2.1.0 (iPhone; iOS 10.2.1; Scale/3.00)',
             ],
         ], get_logger('<%=classname%>'));
@@ -50,23 +51,36 @@ class <%=classname%> extends HttpClient
         $query = array_merge($extraQuery, $query);
         $data = array_merge($extraData, $data);
         $headers = array_merge($extraHeaders, $headers);
-
-        /** @var Response $response */
-        list($response, $body) = $this->_apiCall($httpMethod, $path, $query, $data, $request_type, $headers);
-        $body = $this->transformBody($response, $body);
+        try{
+            /** @var Response $response */
+            list($response, $body) = $this->_apiCall($httpMethod, $path, $query, $data, $request_type, $headers);
+            $body = $this->transformBody($response, $body);
+        } catch (ClientException $e) {
+            $response = $e->getResponse();
+            $body = $response->getBody();
+            $body->rewind();
+            $body = $this->transformBody($response, $body);
+            $body = $this->handleClientException($response, $body);
+        }
 
         if(!$this->isSuccess($response, $body))
         {
-            throw new HttpClientException($this->getErrorMsg($response, $body), $response->getStatusCode());
+            $body = $this->handleLogicException($response, $body);
         }
 
         return $body;
     }
 
-    protected function transformBody(Response $response, $body) {
-        return \json_decode($body, true);
-    }
 
+    protected function transformBody(ResponseInterface $response, $body) {
+        if (array_first($response->getHeader('Content-Type')) == 'application/json')
+        {
+            return \json_decode($body, true);
+        }
+        else {
+            return $body;
+        }
+    }
 
     protected function isSuccess(Response $response, $response_data)
     {
@@ -79,6 +93,18 @@ class <%=classname%> extends HttpClient
         // TODO: Implement getErrorMsg() method.
         return $response_data['error'];
     }
+
+    protected function handleClientException($response, $body)
+    {
+        throw new HttpClientException($this->getErrorMsg($response, $body), $response->getStatusCode(), $body);
+    }
+
+    protected function handleLogicException($response, $body)
+    {
+        throw new HttpClientException($this->getErrorMsg($response, $body), $response->getStatusCode(), $body);
+    }
+
+
 
     /************
      *  Login
@@ -107,8 +133,8 @@ class <%=classname%> extends HttpClient
 
     public function exampleRequireLogin()
     {
-        return $this->requireLogin(function () {
-            return $this->get('/users/maimake');
-        });
+        $this->requireLogin();
+        $body = $this->get('/users/maimake', [], get_defined_vars());
+        return $body;
     }
 }

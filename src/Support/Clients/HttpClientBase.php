@@ -14,6 +14,21 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class HttpClientBase
+ * @package Maimake\Largen\Support\Clients
+ *
+ * @method head($path, $query = [], $data = [], $dataType = RequestOptions::JSON, $headers = [])
+ * @method get($path, $query = [], $data = [], $dataType = RequestOptions::JSON, $headers = [])
+ * @method post($path, $query = [], $data = [], $dataType = RequestOptions::JSON, $headers = [])
+ * @method put($path, $query = [], $data = [], $dataType = RequestOptions::JSON, $headers = [])
+ * @method patch($path, $query = [], $data = [], $dataType = RequestOptions::JSON, $headers = [])
+ * @method delete($path, $query = [], $data = [], $dataType = RequestOptions::JSON, $headers = [])
+ * @method purge($path, $query = [], $data = [], $dataType = RequestOptions::JSON, $headers = [])
+ * @method options($path, $query = [], $data = [], $dataType = RequestOptions::JSON, $headers = [])
+ * @method trace($path, $query = [], $data = [], $dataType = RequestOptions::JSON, $headers = [])
+ * @method connect($path, $query = [], $data = [], $dataType = RequestOptions::JSON, $headers = [])
+ */
 abstract class HttpClientBase
 {
     protected $logger;
@@ -106,13 +121,12 @@ abstract class HttpClientBase
     abstract protected function isLogined();
     abstract protected function login();
 
-    protected function requireLogin($callback)
+    protected function requireLogin()
     {
         if (!$this->isLogined())
             $this->login();
 
         throw_unless($this->isLogined(), AuthorizationException::class, 'You are not allowed to request the resource');
-        return $callback();
     }
 
 
