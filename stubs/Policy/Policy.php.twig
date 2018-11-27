@@ -25,7 +25,7 @@ class <%=classname%>
      */
     public function create(User $user)
     {
-        //
+        return true;
     }
 
 <% for action in actions %>
@@ -39,7 +39,7 @@ class <%=classname%>
      */
     public function <%= action %>(User $user, <%= model_name %> $<%= model_singular %>)
     {
-        //
+        return $user->id == $<%= model_singular %>->user_id;
     }
 
 <% endfor %>

@@ -21,6 +21,7 @@ class <%=classname%> extends Migration
             Schema::create('<%= options['table'] %>', function (Blueprint $table) {
                 $table->increments('id');
                 <%= up %>
+                $table->text('extra');
                 $table->timestamps();
 <% if options['soft-delete'] %>
                 $table->softDeletes();
