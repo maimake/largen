@@ -36,4 +36,18 @@ abstract class RepositoryBase
         });
     }
 
+    public function deleteModels($models, $force = false)
+    {
+        return \DB::transaction(function () use ($models, $force) {
+
+            $models = array_wrap($models);
+
+            /** @var Model $model */
+            foreach ($models as $model)
+            {
+                $force ? $model->forceDelete() : $model->delete();
+            }
+        });
+    }
+
 }

@@ -41,7 +41,7 @@ class PolicyCommand extends GeneratorCommand
         $info['model_name'] = class_basename($this->model);
         $info['model_singular'] = $this->model_singular;
         $info['model_plural'] = $this->model_plural;
-        $info['actions'] = ['view', 'update', 'delete'];
+        $info['actions'] = ['view', 'update', 'delete', 'restore', 'forceDelete'];
 
         $this->template('Policy.php', $info['output'], $info);
 

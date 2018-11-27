@@ -2,12 +2,13 @@
 
 namespace <%=namespace%>;
 
+use GuzzleHttp\Exception\ClientException;
 use Maimake\Largen\Support\Clients\HttpClientBase as HttpClient;
 use Maimake\Largen\Support\Exceptions\HttpClientException;
 use Maimake\Largen\Support\Exceptions\NotImplementedException;
 use GuzzleHttp\RequestOptions;
 use GuzzleHttp\Psr7\Response;
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\ResponseInterface;
 
 class <%=classname%> extends HttpClient
 {
@@ -45,8 +46,11 @@ class <%=classname%> extends HttpClient
             'platform' => 'ios',
         ];
         $extraHeaders = [
-            'token' => $this->token,
         ];
+        $token = $this->token;
+        if (filled($token)){
+            $extraHeaders['Authorization'] = "Bearer $token";
+        }
 
         $query = array_merge($extraQuery, $query);
         $data = array_merge($extraData, $data);
@@ -68,24 +72,24 @@ class <%=classname%> extends HttpClient
         return $body;
     }
 
-    protected function isSuccess(Response $response, $response_data)
+    protected function isSuccess(ResponseInterface $response, $response_data)
     {
         // TODO: Implement isSuccess() method.
         return true;
     }
 
-    protected function getErrorMsg(Response $response, $response_data)
+    protected function getErrorMsg(ResponseInterface $response, $response_data)
     {
         // TODO: Implement getErrorMsg() method.
-        return $response_data['error'];
+        return $response_data['message'];
     }
 
-    protected function handleClientException($response, $body)
+    protected function handleClientException(ResponseInterface $response, $body)
     {
         throw new HttpClientException($this->getErrorMsg($response, $body), $response->getStatusCode(), $body);
     }
 
-    protected function handleLogicException($response, $body)
+    protected function handleLogicException(ResponseInterface $response, $body)
     {
         throw new HttpClientException($this->getErrorMsg($response, $body), $response->getStatusCode(), $body);
     }
@@ -113,14 +117,14 @@ class <%=classname%> extends HttpClient
 
     public function example()
     {
-        $body = $this->apiCall(Request::METHOD_GET, '/users/maimake');
+        $body = $this->get('users/maimake', [], get_defined_vars());
         return $body;
     }
 
     public function exampleRequireLogin()
     {
         $this->requireLogin();
-        $body = $this->get('/users/maimake', [], get_defined_vars());
+        $body = $this->get('users/maimake', [], get_defined_vars());
         return $body;
     }
 }

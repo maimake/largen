@@ -391,7 +391,7 @@ if (! function_exists('load_api_by_versions'))
     function load_api_by_versions($api_dir, $fallback = true) {
 
         $api_dir = path_slash($api_dir);
-        $files = collect(app('files')->glob($api_dir . "**/*.php"));
+        $files = collect(app('files')->glob($api_dir . "*/*.php"));
         $files = $files->mapToGroups(function ($item) use ($api_dir) {
             $g = str_after($item, $api_dir);
             $g = str_before($g, "/");
@@ -440,8 +440,8 @@ if (! function_exists('internal_request'))
     {
         $original_request = request();
         $request = Request::create($uri, $method, $parameters, $original_request->cookies->all());
-        if ($headers != false) {
-            $request->headers->add(request()->headers->all());
+        if ($headers !== false) {
+            $headers = array_merge(request()->headers->all(), $headers);
             $request->headers->add($headers);
         }
 

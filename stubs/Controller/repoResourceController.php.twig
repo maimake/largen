@@ -18,7 +18,7 @@ class <%= classname %> extends Controller
 {
     protected $repository;
 
-    public function __construct(<%= model_name %>Repository $repository)
+    public function __construct(<%= model_name %>ModelRepository $repository)
     {
         $this->repository = $repository;
         $this->middleware(['auth'])->except('index', 'show', 'searchFilter');
