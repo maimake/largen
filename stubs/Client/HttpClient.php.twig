@@ -3,6 +3,7 @@
 namespace <%=namespace%>;
 
 use GuzzleHttp\Exception\ClientException;
+use Illuminate\Validation\ValidationException;
 use Maimake\Largen\Support\Clients\HttpClientBase as HttpClient;
 use Maimake\Largen\Support\Exceptions\HttpClientException;
 use Maimake\Largen\Support\Exceptions\NotImplementedException;
@@ -84,12 +85,16 @@ class <%=classname%> extends HttpClient
         return $response_data['message'];
     }
 
-    protected function handleClientException(ResponseInterface $response, $body)
+    protected function handleClientException($response, $body)
     {
+        if ($response->getStatusCode() == 422)
+        {
+            throw ValidationException::withMessages($body['errors']);
+        }
         throw new HttpClientException($this->getErrorMsg($response, $body), $response->getStatusCode(), $body);
     }
 
-    protected function handleLogicException(ResponseInterface $response, $body)
+    protected function handleLogicException($response, $body)
     {
         throw new HttpClientException($this->getErrorMsg($response, $body), $response->getStatusCode(), $body);
     }
