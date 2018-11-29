@@ -31,10 +31,8 @@ class <%=classname%> extends Migration
         // $table->unique(['email']);
         // $table->index(['name']);
 
-        DB::transaction(function () {
-            Schema::table('<%= options['table'] %>', function (Blueprint $table) {
-                <%= up %>
-            });
+        Schema::table('<%= options['table'] %>', function (Blueprint $table) {
+            <%= up %>
         });
     }
 
@@ -55,10 +53,8 @@ class <%=classname%> extends Migration
         // $table->dropUnique('users_email_unique');
         // $table->dropIndex('name_index');
 
-        DB::transaction(function () {
-            Schema::table('<%= options['table'] %>', function (Blueprint $table) {
-                <%= down %>
-            });
+        Schema::table('<%= options['table'] %>', function (Blueprint $table) {
+            <%= down %>
         });
     }
 }

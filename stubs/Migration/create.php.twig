@@ -17,16 +17,14 @@ class <%=classname%> extends Migration
      */
     public function up()
     {
-        DB::transaction(function () {
-            Schema::create('<%= options['table'] %>', function (Blueprint $table) {
-                $table->increments('id');
-                <%= up %>
-                $table->text('extra');
-                $table->timestamps();
+        Schema::create('<%= options['table'] %>', function (Blueprint $table) {
+            $table->increments('id');
+            <%= up %>
+            $table->text('extra');
+            $table->timestamps();
 <% if options['soft-delete'] %>
-                $table->softDeletes();
+            $table->softDeletes();
 <% endif %>
-            });
         });
     }
 
@@ -37,8 +35,6 @@ class <%=classname%> extends Migration
      */
     public function down()
     {
-        DB::transaction(function () {
-            <%= down %>
-        });
+        <%= down %>
     }
 }
