@@ -100,17 +100,17 @@ class ControllerCommand extends GeneratorCommand
                 'has_user' => $this->isModelBelongsToUser($this->model),
             ];
 
-//            $this->callSameContext("largen:request", ['name' => $name]);
-//            $this->callSameContext("largen:search_request", ['name' => $name]);
-//
-//            $request_info = $this->nsPath->getClassInfoByType('request', $name);
-//            $search_request_info = $this->nsPath->getClassInfoByType('request', $name, null, "{$name}SearchRequest");
+            $this->callSameContext("largen:request", ['name' => $name]);
+            $this->callSameContext("largen:search_request", ['name' => $name]);
 
-//            $this->template_data['request_class_name'] = $request_info['classname'];
-//            $this->template_data['request_full_class_name'] = $request_info['fullClassname'];
-//
-//            $this->template_data['search_request_class_name'] = $search_request_info['classname'];
-//            $this->template_data['search_request_full_class_name'] = $search_request_info['fullClassname'];
+            $request_info = $this->nsPath->getClassInfoByType('request', $name);
+            $search_request_info = $this->nsPath->getClassInfoByType('request', $name, null, "{$name}SearchRequest");
+
+            $this->template_data['request_class_name'] = $request_info['classname'];
+            $this->template_data['request_full_class_name'] = $request_info['fullClassname'];
+
+            $this->template_data['search_request_class_name'] = $search_request_info['classname'];
+            $this->template_data['search_request_full_class_name'] = $search_request_info['fullClassname'];
 
 
             if ($this->option('api'))
