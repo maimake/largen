@@ -145,6 +145,10 @@ if (! function_exists('resolve_path'))
      * @throws Exception
      */
     function resolve_path(string $path, $base = '@base_path') {
+        if ($path == ':memory:')
+            return $path;
+
+        
         if(strpos($path,'/') === 0)
         {
             // Absolute path
