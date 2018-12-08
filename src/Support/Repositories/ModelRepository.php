@@ -63,7 +63,7 @@ class ModelRepository extends RepositoryBase
     public function paginate($where = null, $perPage = null, $columns = ['*'], $pageName = 'page', $page = null)
     {
         $query = $this->newQuery($where);
-        return $query->paginate($perPage, $columns, $pageName, $page);
+        return $query->paginate($perPage ?: request('perPage'), $columns, $pageName, $page);
 //        return $query->simplePaginate($perPage, $columns, $pageName, $page);
     }
 

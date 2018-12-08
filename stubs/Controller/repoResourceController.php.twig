@@ -35,7 +35,7 @@ class <%= classname %> extends Controller
     public function index(<%= search_request_class_name %> $request)
     {
         $data = $request->toData();
-        $data['<%= model_plural %>'] = $this->repository->paginate($request);
+        $data['<%= model_plural %>'] = $this->repository->paginate($request)->appends($data['input']);
         return view('<%= view_namespace %><%= model_plural %>.index', $data);
     }
 

@@ -30,8 +30,7 @@ class <%= classname %> extends Controller
     public function index(<%= search_request_class_name %> $request)
     {
         $data = $request->toData();
-        $query = $request->getSearchModel()->search(<%= model_name %>::query());
-        $data['<%= model_plural %>'] = $query->paginate()->appends($request->getRequestData());
+        $data['<%= model_plural %>'] = $this->repository->paginate($request)->appends($data['input']);
 
         return view('<%= view_namespace %><%= model_plural %>.index', $data);
     }
