@@ -2,59 +2,20 @@
 
 namespace <%=namespace%>;
 
-use Maimake\Largen\Support\Repositories\RepositoryBase;
+use Maimake\Largen\Support\Repositories\ModelRepository;
 use <%= model_class %>;
 
-class <%= classname %> extends RepositoryBase
+class <%= classname %> extends ModelRepository
 {
-    public function count($where = null, $columns = '*')
-    {
-        $query = <%= model_name %>::query();
-        $query = $this->buildQuery($query, $where);
-        return $query->count($columns);
-    }
-
-    public function exists($where)
-    {
-        $query = <%= model_name %>::query();
-        $query = $this->buildQuery($query, $where);
-        return $query->exists();
-    }
+    protected $modelClass = <%= model_name %>::class;
 
     public function create($data)
     {
         return \DB::transaction(function () use ($data) {
-            $model = <%= model_name %>::create($data);
+            $model = $this->modelClass::create($data);
+            // do something
             return $model;
         });
     }
 
-    public function update($where, $data)
-    {
-        return \DB::transaction(function () use ($where, $data) {
-            $query = <%= model_name %>::query();
-            $query = $this->buildQuery($query, $where);
-            $model = $query->update($data);
-            return $model;
-        });
-    }
-
-
-    public function delete($where = null)
-    {
-        return \DB::transaction(function () use ($where) {
-            $query = <%= model_name %>::query();
-            $query = $this->buildQuery($query, $where);
-            $rows = $query->delete();
-            return $rows;
-        });
-    }
-
-    public function paginate($where = null, $perPage = null, $columns = ['*'], $pageName = 'page', $page = null)
-    {
-        $query = <%= model_name %>::query();
-        $query = $this->buildQuery($query, $where);
-        return $query->paginate($perPage, $columns, $pageName, $page);
-//        return $query->simplePaginate($perPage, $columns, $pageName, $page);
-    }
 }

@@ -2,12 +2,17 @@
 
 namespace <%=namespace%>;
 
-use <%= search_full_classname %>;
 use Maimake\Largen\Support\Http\Requests\SearchRequest;
 
 class <%=classname%> extends SearchRequest
 {
-    protected $searchModelClass = <%= search_classname %>::class;
+    //数据字典。用于多选，单选的文本和value间映射
+    protected $enumDic = [
+        'status' => [
+            '0' => '正常',
+            '-1' => '禁用',
+        ]
+    ];
 
     //用于校验筛选的输入值
     public function rules()
@@ -22,18 +27,6 @@ class <%=classname%> extends SearchRequest
             'sort' => 'string',
         ];
     }
-
-    //数据字典。用于多选，单选的文本和value间映射
-    protected function createEnumDic()
-    {
-        return [
-            'status' => [
-                '0' => '关闭',
-                '1' => '开启',
-            ]
-        ];
-    }
-
 
     //补充默认值
     protected function getRequestDataWithDefaultValue()

@@ -51,30 +51,11 @@ class SearchRequestCommand extends GeneratorCommand
 
     protected function generateFiles()
     {
-        $this->generateSearch();
-        $this->generateSearchRequest();
-    }
-
-    private function generateSearch()
-    {
-        $name = $this->argument('name');
-        $info = $this->nsPath->getClassInfoByType('search', $name, "SearchModel");
-        $info['model_plural'] = $this->model_plural;
-        $this->template('SearchModel.php', $info['output'], $info);
-
-        $this->search_classname = $info['classname'];
-        $this->search_full_classname = $info['fullClassname'];
-    }
-
-
-    private function generateSearchRequest()
-    {
         $name = $this->argument('name');
         $info = $this->nsPath->getClassInfoByType('request', $name, "SearchRequest");
         $info['search_classname'] = $this->search_classname;
         $info['search_full_classname'] = $this->search_full_classname;
         $this->template('SearchRequest.php', $info['output'], $info);
     }
-
 
 }

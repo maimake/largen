@@ -99,6 +99,6 @@ class <%= classname %> extends Controller
     {
         $<%= model_singular %>->delete();
 
-        return response()->json($<%= model_singular %>);
+        return response()->json($<%= model_singular %>, 204);
     }
 }

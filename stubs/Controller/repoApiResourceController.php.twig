@@ -17,7 +17,7 @@ class <%= classname %> extends Controller
 {
     protected $repository;
 
-    public function __construct(<%= model_name %>Repository $repository)
+    public function __construct(<%= model_name %>ModelRepository $repository)
     {
         $this->repository = $repository;
         $this->middleware(['auth'])->except('index', 'show', 'searchFilter');
@@ -32,7 +32,7 @@ class <%= classname %> extends Controller
      */
     public function index(<%= search_request_class_name %> $request)
     {
-        $<%= model_plural %> = $this->repository->search($request);
+        $<%= model_plural %> = $this->repository->paginate($request)->appends($request->toData());
         return response()->json($<%= model_plural %>);
     }
 
@@ -46,7 +46,7 @@ class <%= classname %> extends Controller
     public function searchFilter(Request $request, $filter_name)
     {
         $filter_key = $request->get('q', '');
-        return $this->repository->searchFilters($filter_name, $filter_key);
+        return $this->repository->searchFilter($filter_name, $filter_key);
     }
 
 
@@ -58,10 +58,7 @@ class <%= classname %> extends Controller
      */
     public function store(<%= request_class_name %> $request)
     {
-        $<%= model_singular %> = new <%= model_name %>($request->validated());
-        $<%= model_singular %>->user()->associate(Auth::user());
-        $this->repository->save($<%= model_singular %>);
-
+        $<%= model_singular %> = $this->repository->create($request->validated());
         return response()->json($<%= model_singular %>);
     }
 
@@ -99,8 +96,8 @@ class <%= classname %> extends Controller
      */
     public function destroy(<%= model_name %> $<%= model_singular %>)
     {
-        $this->repository->delete($<%= model_singular %>);
+        $this->repository->deleteModels($<%= model_singular %>);
 
-        return response()->json($<%= model_singular %>);
+        return response()->json($<%= model_singular %>, 204);
     }
 }
