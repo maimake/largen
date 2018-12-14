@@ -25,7 +25,7 @@ class <%=classname%> extends HttpClient
                 'Accept' => 'application/json',
                 'User-Agent' => 'App/2.1.0 (iPhone; iOS 10.2.1; Scale/3.00)',
             ],
-        ], get_logger('<%=classname%>'));
+        ], get_logger('<%=classname%>'), config('app.debug') ? MessageFormatter::DEBUG : null);
 
         $this->user = $user;
         $this->pwd = $pwd;
