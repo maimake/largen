@@ -3,13 +3,12 @@
 namespace Maimake\Largen\Support\Clients;
 
 use GuzzleHttp\Cookie\CookieJar;
-use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\RequestOptions;
-use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -39,11 +38,12 @@ abstract class HttpClientBase
     protected $useCookie;
 
 
+    private $check_login = true;
+
+
     public function __construct(bool $useCookie, array $config = [], LoggerInterface $logger = null, $logFormat = '{code} "{method} {uri}" {res_header_Content-Length}')
     {
         $this->useCookie = $useCookie;
-        $this->jar = new CookieJar();
-
 
         if (empty($config['handler']))
         {
@@ -66,7 +66,7 @@ abstract class HttpClientBase
             $stack->push(
                 Middleware::log(
                     $this->logger,
-                    new MessageFormatter(config('app.debug', false) ? MessageFormatter::DEBUG : $logFormat)
+                    new MessageFormatter($logFormat)
                 )
             );
         }
@@ -79,6 +79,12 @@ abstract class HttpClientBase
         $this->httpClient = new Client($config);
     }
 
+    protected function getCookie()
+    {
+        if (!$this->useCookie) return null;
+        if (!$this->jar) $this->jar = new CookieJar();
+        return $this->jar;
+    }
 
     /************
      *  Request
@@ -90,7 +96,7 @@ abstract class HttpClientBase
         $option = [
             RequestOptions::QUERY => $query,
             RequestOptions::HEADERS => $headers,
-            RequestOptions::COOKIES => $this->useCookie ? $this->jar : null,
+            RequestOptions::COOKIES => $this->getCookie(),
             $dataType => $data,
         ];
 
@@ -112,8 +118,10 @@ abstract class HttpClientBase
         }
     }
 
-    protected function getBodyFromResponse(ResponseInterface $response)
+    protected function getBodyFromResponse(?ResponseInterface $response)
     {
+        if (is_null($response)) return null;
+
         $response->getBody()->rewind();
         $body = $response->getBody()->getContents();
         return $this->transformBody($response, $body);
@@ -138,10 +146,18 @@ abstract class HttpClientBase
 
     protected function requireLogin()
     {
-        if (!$this->isLogined())
-            $this->login();
+        if ($this->check_login)
+        {
+            $this->check_login = false;
 
-        throw_unless($this->isLogined(), AuthorizationException::class, 'You are not allowed to request the resource');
+            if (!$this->isLogined())
+                $this->login();
+
+            if (!$this->isLogined())
+                throw new AuthenticationException('You are not allowed to request the resource');
+
+            $this->check_login = true;
+        }
     }
 
 

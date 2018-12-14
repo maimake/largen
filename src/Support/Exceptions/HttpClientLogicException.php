@@ -8,7 +8,7 @@
 
 namespace Maimake\Largen\Support\Exceptions;
 
-class HttpClientException extends \Exception
+class HttpClientLogicException extends \Exception
 {
     public $body;
 

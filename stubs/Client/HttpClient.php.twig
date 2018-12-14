@@ -2,13 +2,9 @@
 
 namespace <%=namespace%>;
 
-use GuzzleHttp\Exception\ClientException;
-use Illuminate\Validation\ValidationException;
-use Maimake\Largen\Support\Clients\HttpClientBase as HttpClient;
-use Maimake\Largen\Support\Exceptions\HttpClientException;
+use Maimake\Largen\Support\Clients\HttpClient;
 use Maimake\Largen\Support\Exceptions\NotImplementedException;
 use GuzzleHttp\RequestOptions;
-use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 
 class <%=classname%> extends HttpClient
@@ -36,41 +32,27 @@ class <%=classname%> extends HttpClient
         $this->token = $token;
     }
 
-    protected function apiCall($httpMethod, $path, $query = [], $data = [], $headers = [])
+    protected function apiCall($httpMethod, $path, $query = [], $data = [], $dataType = RequestOptions::JSON, $headers = [])
     {
-        $request_type = RequestOptions::JSON;
-
         $extraQuery = [
-            'timestamp' => time(),
         ];
         $extraData = [
-            'platform' => 'ios',
         ];
         $extraHeaders = [
         ];
+
         $token = $this->token;
         if (filled($token)){
             $extraHeaders['Authorization'] = "Bearer $token";
         }
 
-        $query = array_merge($extraQuery, $query);
-        $data = array_merge($extraData, $data);
-        $headers = array_merge($extraHeaders, $headers);
-        try{
-            /** @var Response $response */
-            list($response, $body) = $this->_apiCall($httpMethod, $path, $query, $data, $request_type, $headers);
-
-            if(!$this->isSuccess($response, $body))
-            {
-                $body = $this->handleLogicException($response, $body);
-            }
-        } catch (ClientException $e) {
-            $response = $e->getResponse();
-            $body = $this->getBodyFromResponse($response);
-            $body = $this->handleClientException($response, $body);
-        }
-
-        return $body;
+        return parent::apiCall($httpMethod,
+            $path,
+            array_merge($extraQuery, $query),
+            array_merge($extraData, $data),
+            $dataType,
+            array_merge($extraHeaders, $headers)
+        );
     }
 
     protected function isSuccess(ResponseInterface $response, $response_data)
@@ -83,20 +65,6 @@ class <%=classname%> extends HttpClient
     {
         // TODO: Implement getErrorMsg() method.
         return $response_data['message'];
-    }
-
-    protected function handleClientException($response, $body)
-    {
-        if ($response->getStatusCode() == 422)
-        {
-            throw ValidationException::withMessages($body['errors']);
-        }
-        throw new HttpClientException($this->getErrorMsg($response, $body), $response->getStatusCode(), $body);
-    }
-
-    protected function handleLogicException($response, $body)
-    {
-        throw new HttpClientException($this->getErrorMsg($response, $body), $response->getStatusCode(), $body);
     }
 
 
