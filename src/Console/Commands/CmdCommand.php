@@ -6,6 +6,7 @@ class CmdCommand extends GeneratorCommand
 {
     protected $signature = 'largen:command 
     {name : Command Name} 
+    {--sig : Response with process signal} 
     {--sign= : Console Signature} 
     {--desc= : Cammand Description}';
 

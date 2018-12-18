@@ -20,6 +20,15 @@ class <%=classname%> extends Command
      */
     protected $description = '<%= options['desc'] %>';
 
+    <% if options['sign'] %>
+    /**
+     * Stopping worker ?
+     * @var boolean
+     */
+    private $run = true;
+
+    <% endif %>
+
     /**
      * Create a new command instance.
      *
@@ -38,5 +47,44 @@ class <%=classname%> extends Command
     public function handle()
     {
         $this->info(self::class . " Called");
+
+        <% if options['sign'] %>
+
+        pcntl_async_signals(true);
+
+        pcntl_signal(SIGINT, [$this, 'shutdown']); // Call on SIGINT
+        pcntl_signal(SIGTERM, [$this, 'terminate']); // Call on SIGTERM
+
+        while ($this->run) {
+
+            sleep(1);
+            $this->warn('Worker is working');
+
+        }
+
+        <% endif %>
     }
+
+
+    <% if options['sign'] %>
+
+    public function terminate()
+    {
+        $this->info('Terminate worker');
+        // When set to false, worker will finish current item and stop.
+        $this->run = false;
+        // exit(0);
+    }
+
+    public function shutdown()
+    {
+        $this->info('Gracefully stopping worker...');
+        // When set to false, worker will finish current item and stop.
+        $this->run = false;
+    }
+
+    <% endif %>
+
+
+
 }
