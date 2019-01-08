@@ -17,7 +17,7 @@ class <%=classname%> extends Migration
      */
     public function up()
     {
-
+        Schema::disableForeignKeyConstraints();
         // =======================================
         // Examples
         // =======================================
@@ -34,6 +34,7 @@ class <%=classname%> extends Migration
         Schema::table('<%= options['table'] %>', function (Blueprint $table) {
             <%= up %>
         });
+        Schema::enableForeignKeyConstraints();
     }
 
     /**
@@ -43,6 +44,7 @@ class <%=classname%> extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         // =======================================
         // Examples
         // =======================================
@@ -56,5 +58,6 @@ class <%=classname%> extends Migration
         Schema::table('<%= options['table'] %>', function (Blueprint $table) {
             <%= down %>
         });
+        Schema::enableForeignKeyConstraints();
     }
 }
