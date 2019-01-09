@@ -53,6 +53,7 @@ class InstallCommand extends GeneratorCommand
         $gitingore = "
 .phpstorm.meta.php
 _ide_helper.php
+.idea/
         ";
 
         $this->appendToFile(base_path('.gitignore'), $gitingore);

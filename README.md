@@ -50,7 +50,7 @@ Or
 >  yarn start
 
 # Setup Directories for IDEA IDE (Please open project in IDE first.)
->  ./artsan largen:idea
+>  ./artisan largen:idea
 ```
 
 One line install and setup
