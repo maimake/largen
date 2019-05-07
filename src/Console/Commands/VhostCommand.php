@@ -56,6 +56,25 @@ class VhostCommand extends GeneratorCommand
         $this->systemSudoOrFail("echo '127.0.0.1 $server_name' >> /etc/hosts");
         $this->systemOrFail("sudo nginx -s reload");
 
+        $this->info("If you want http cache, You can add following lines to nginx config file manually");
+        $this->info('
+        
+        http {
+            map $sent_http_content_type $expires {
+                default                    off;
+                text/html                  epoch;
+                text/css                   max;
+                application/javascript     max;
+                ~image/                    max;
+            }
+            server {
+                ...
+                expires $expires;
+                ...
+            }
+        }
+        ');
+
         $this->alert("http://$server_name");
     }
 }

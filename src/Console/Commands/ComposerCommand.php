@@ -12,9 +12,9 @@ class ComposerCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $signature = 'largen:composer 
+    protected $signature = 'largen:composer
     {name? : Package name}
-    {--dev : Add requirement to require-dev} 
+    {--dev : Add requirement to require-dev}
     {--provider= : Add provider to app config}
     {--alias= : Add alias to app config}
     {--alias-class= : The alias Class name}
@@ -72,6 +72,10 @@ class ComposerCommand extends GeneratorCommand
 
     private function composer($package, $dev, $provider_class=null, $alias=null, $alias_class=null)
     {
+        $ver = config("largen.composer.$package");
+        if ($ver) {
+            $package = "\"$package\":\"$ver\"";
+        }
         $this->systemOrFail("composer require $package" . ($dev ? " --dev " : ""));
         if (filled($provider_class))
         {

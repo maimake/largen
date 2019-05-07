@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'composer' => [
+        'laravelcollective/html' => '5.7.*'
+    ],
     'active_commands' => [
         'enable' => (env('APP_ENV') == 'local' || env('APP_DEBUG')),
         'blacklist' => [
