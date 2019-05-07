@@ -16,7 +16,7 @@ Now, I make more further: Generate files with templates and enable it automatica
 1. Linux / MacOS 
 2. php 7.1.3+
 3. ruby
-4. laravel 5.7.*
+4. laravel 5.8.*
 
 ## Installation
 
@@ -24,7 +24,7 @@ Now, I make more further: Generate files with templates and enable it automatica
 Create an empty laravel project:
 
 ```bash
-composer create-project --prefer-dist laravel/laravel blog 5.7.*
+composer create-project --prefer-dist laravel/laravel blog 5.8.*
 cd blog
 composer require maimake/largen
 ./artisan largen:install
@@ -57,7 +57,7 @@ One line install and setup
 
 ```bash
 name=blog && \
-composer create-project --prefer-dist laravel/laravel $name 5.7.* && \
+composer create-project --prefer-dist laravel/laravel $name 5.8.* && \
 cd $name && \
 composer require maimake/largen && \
 ./artisan largen:install -q && \
@@ -167,7 +167,7 @@ Here is one line command. Replace the path of  `packages` as you like:
 ```bash
 git clone git@github.com:maimake/largen.git packages/largen && \
 name=Demo && \
-composer create-project --prefer-dist laravel/laravel $name 5.7.* && \
+composer create-project --prefer-dist laravel/laravel $name 5.8.* && \
 cd $name && \
 sed -i '' -e '/"type": "project"/s/$/\' -e '"repositories": [{ "type": "path", "url": "..\/packages\/*" }],/' composer.json && \
 composer require "maimake/largen":"dev-master" 
